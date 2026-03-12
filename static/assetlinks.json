@@ -2,9 +2,9 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
-    "package_name": "YOUR.ANDROID.PACKAGE.NAME",
+    "package_name": "com.onrender.zentara_4xzu.twa",
     "sha256_cert_fingerprints": [
-      "YOUR:SHA256:FINGERPRINT:GOES:HERE:PASTE:IT"
+      "58:74:C4:E0:E5:03:32:5B:D2:18:41:29:BB:B2:97:3F:8C:CD:38:8E:11:82:3B:8C:8B:4D:75:58:C7:32:77:40"
     ]
   }
 }]
