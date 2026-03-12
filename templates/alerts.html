@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}Alerts — ZenTara{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-6">
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="font-display text-3xl font-bold" style="color: var(--charcoal);"><i class="fi fi-rr-bell" style="margin-right:6px"></i> All Alerts</h1>
+            <p class="text-gray-500 mt-1">{{ active_alerts|length }} active · {{ dismissed_alerts|length }} dismissed</p>
+        </div>
+        <div class="flex gap-3">
+            {% if active_alerts %}
+            <button onclick="dismissAllAlerts()" class="btn-ghost text-sm">
+                ✓ Dismiss All
+            </button>
+            {% endif %}
+            <a href="/dashboard" class="btn-coral text-sm">← Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Level tabs -->
+    <div class="flex gap-2 mb-5 flex-wrap">
+        {% set critical = active_alerts | selectattr('level', 'eq', 'CRITICAL') | list %}
+        {% set warning = active_alerts | selectattr('level', 'eq', 'WARNING') | list %}
+        {% set info = active_alerts | selectattr('level', 'eq', 'INFO') | list %}
+        <div class="px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1.5" style="background: rgba(255,59,48,0.12); color: var(--critical);">
+            <i class="fi fi-ss-circle" style="font-size:0.6rem"></i> {{ critical|length }} Critical
+        </div>
+        <div class="px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1.5" style="background: rgba(255,179,71,0.15); color: #b37a00;">
+            <i class="fi fi-ss-circle" style="font-size:0.6rem"></i> {{ warning|length }} Warning
+        </div>
+        <div class="px-3 py-1.5 rounded-full text-sm font-semibold flex items-center gap-1.5" style="background: rgba(78,205,196,0.15); color: #2a8a7e;">
+            <i class="fi fi-ss-circle" style="font-size:0.6rem"></i> {{ info|length }} Info
+        </div>
+    </div>
+
+    <!-- Active Alerts -->
+    {% if active_alerts %}
+    <div class="flex flex-col gap-3 mb-8">
+        {% for alert in active_alerts %}
+        <div class="bg-white rounded-2xl p-4 shadow-sm border-l-4 alert-{{ alert.level.lower() }}
+                    {% if alert.level == 'CRITICAL' %}shadow-red-100{% endif %}"
+             id="alert-row-{{ alert.id }}"
+             style="transition: all 0.3s;">
+            <div class="flex items-start gap-4">
+                <!-- Level dot -->
+                <div class="flex-shrink-0 mt-1">
+                    {% if alert.level == 'CRITICAL' %}
+                    <span class="pulse-dot inline-block w-3 h-3 rounded-full" style="background: var(--critical);"></span>
+                    {% elif alert.level == 'WARNING' %}
+                    <span class="pulse-dot inline-block w-3 h-3 rounded-full" style="background: var(--gold);"></span>
+                    {% else %}
+                    <span class="inline-block w-3 h-3 rounded-full" style="background: var(--teal);"></span>
+                    {% endif %}
+                </div>
+
+                <!-- Content -->
+                <div class="flex-1">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="font-semibold" style="color: var(--charcoal);">{{ alert.title }}</span>
+                                {% if alert.clause_reference %}
+                                <span class="mono text-xs px-2 py-0.5 rounded" style="background: rgba(0,0,0,0.06); color: #888;">
+                                    Clause {{ alert.clause_reference }}
+                                </span>
+                                {% endif %}
+                                <span class="text-xs px-2 py-0.5 rounded-full font-bold"
+                                      style="background: {{ alert.level_color }}15; color: {{ alert.level_color }};">
+                                    {{ alert.level }}
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-1.5 leading-relaxed">{{ alert.message }}</p>
+
+                            <!-- Carrier name -->
+                            {% if alert.carrier %}
+                            <div class="mt-2">
+                                <a href="/carrier/{{ alert.carrier_id }}"
+                                   class="text-xs font-medium px-2.5 py-1 rounded-full"
+                                   style="background: rgba(0,0,0,0.05); color: #666;">
+                                    <i class="fi fi-rr-truck-side" style="margin-right:2px"></i> {{ alert.carrier.name }}
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Days remaining -->
+                        {% if alert.days_remaining is not none %}
+                        <div class="flex-shrink-0 text-center">
+                            <div class="text-2xl font-display font-bold"
+                                 style="color: {{ alert.level_color }}; line-height: 1;">
+                                {{ alert.days_remaining }}
+                            </div>
+                            <div class="text-xs text-gray-400">day{{ 's' if alert.days_remaining != 1 }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex gap-3 mt-3 flex-wrap">
+                        <a href="/chat?q=Tell+me+about+this+{{ alert.level }}+alert:+{{ alert.title | urlencode }}"
+                           class="text-xs font-medium px-3 py-1.5 rounded-full transition-all hover:opacity-80"
+                           style="color: var(--coral); background: rgba(255,107,107,0.1); text-decoration:none;">
+                            <i class="fi fi-rr-comment-alt" style="margin-right:2px"></i> <b><i>Ask Tara</i></b>
+                        </a>
+                        {% if alert.carrier_id %}
+                        <a href="/carrier/{{ alert.carrier_id }}"
+                           class="text-xs font-medium px-3 py-1.5 rounded-full"
+                           style="color: #666; background: rgba(0,0,0,0.05);">
+                            View Carrier
+                        </a>
+                        {% endif %}
+                        <button class="text-xs font-medium px-3 py-1.5 rounded-full transition-all hover:bg-gray-100 ml-auto"
+                                style="color: #999;"
+                                onclick="dismissOne({{ alert.id }})">
+                            ✕ Dismiss
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-16 bg-white rounded-2xl shadow-sm mb-8">
+        <img src="{{ url_for('static', filename='tara/tara_closeup.png') }}"
+             class="h-28 mx-auto mb-4 rounded-full ring-2 ring-coral/20 tara-float">
+        <h2 class="font-display text-2xl font-bold text-gray-400 mb-2">All clear! <i class="fi fi-rr-leaf" style="color:var(--teal)"></i></h2>
+        <p class="text-gray-400">No active alerts. Tara is at peace.</p>
+    </div>
+    {% endif %}
+
+    <!-- Dismissed Alerts (collapsible) -->
+    {% if dismissed_alerts %}
+    <details class="mt-4">
+        <summary class="text-sm font-medium text-gray-400 cursor-pointer hover:text-gray-600 mb-3">
+            📁 {{ dismissed_alerts|length }} dismissed alerts
+        </summary>
+        <div class="flex flex-col gap-2 mt-3">
+            {% for alert in dismissed_alerts[:10] %}
+            <div class="bg-white/60 rounded-xl p-3 border border-gray-100 opacity-60">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs">{{ alert.level_emoji }}</span>
+                    <span class="text-sm text-gray-400 line-through">{{ alert.title }}</span>
+                    <span class="text-xs text-gray-300 ml-auto">
+                        {{ alert.created_at.strftime('%b %d') if alert.created_at else '' }}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </details>
+    {% endif %}
+</div>
+
+<script>
+async function dismissOne(id) {
+    await fetch(`/alerts/dismiss/${id}`, { method: 'POST' });
+    const el = document.getElementById(`alert-row-${id}`);
+    if (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(20px)';
+        setTimeout(() => el.remove(), 300);
+    }
+}
+
+async function dismissAllAlerts() {
+    await fetch('/alerts/dismiss-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+    });
+    window.location.reload();
+}
+</script>
+{% endblock %}

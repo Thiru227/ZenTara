@@ -1,0 +1,359 @@
+{% extends "base.html" %}
+{% block title %}Admin — User Management — ZenTara{% endblock %}
+
+{% block extra_head %}
+<style>
+    .admin-header {
+        background: linear-gradient(135deg, var(--charcoal) 0%, #2a2a40 100%);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        padding: 2rem 0;
+    }
+
+    .user-table-wrapper {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .user-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+    }
+    .user-table thead {
+        background: rgba(30,30,46,0.04);
+    }
+    .user-table th {
+        text-align: left;
+        padding: 1rem 1.2rem;
+        font-weight: 600;
+        color: #666;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .user-table td {
+        padding: 0.9rem 1.2rem;
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+        vertical-align: middle;
+    }
+    .user-table tbody tr {
+        transition: background 0.2s;
+    }
+    .user-table tbody tr:hover {
+        background: rgba(255,107,107,0.03);
+    }
+
+    .avatar-circle {
+        width: 38px; height: 38px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 0.8rem; color: white;
+        flex-shrink: 0;
+        background: linear-gradient(135deg, var(--coral), var(--gold));
+    }
+    .avatar-circle img {
+        width: 100%; height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .role-badge {
+        display: inline-flex; align-items: center; gap: 0.3rem;
+        padding: 0.25rem 0.7rem;
+        border-radius: 20px;
+        font-size: 0.78rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .role-admin {
+        background: rgba(255,107,107,0.12); color: var(--coral);
+    }
+    .role-user {
+        background: rgba(78,205,196,0.12); color: #2a9d8f;
+    }
+
+    .status-dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+    .status-active { background: #4ECDC4; }
+    .status-inactive { background: #ccc; }
+
+    .provider-badge {
+        display: inline-flex; align-items: center; gap: 0.3rem;
+        padding: 0.2rem 0.6rem; border-radius: 6px;
+        font-size: 0.75rem; font-weight: 500;
+        background: rgba(0,0,0,0.04); color: #666;
+    }
+
+    .action-btn {
+        padding: 0.35rem 0.7rem;
+        border-radius: 8px;
+        border: 1px solid rgba(0,0,0,0.1);
+        background: white;
+        cursor: pointer;
+        font-size: 0.78rem; font-weight: 500;
+        transition: all 0.2s;
+        font-family: 'DM Sans', sans-serif;
+        color: #555;
+    }
+    .action-btn:hover {
+        border-color: var(--coral);
+        color: var(--coral);
+        background: rgba(255,107,107,0.04);
+    }
+    .action-btn.danger:hover {
+        border-color: var(--critical);
+        color: var(--critical);
+        background: rgba(255,59,48,0.06);
+    }
+
+    .stat-card-admin {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid rgba(0,0,0,0.06);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        text-align: center;
+    }
+    .stat-card-admin .stat-val {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem; font-weight: 700;
+    }
+
+    .search-admin {
+        background: rgba(0,0,0,0.03);
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 12px;
+        padding: 0.7rem 1rem 0.7rem 2.5rem;
+        width: 280px; font-size: 0.9rem;
+        font-family: 'DM Sans', sans-serif;
+        outline: none; transition: all 0.3s;
+    }
+    .search-admin:focus {
+        border-color: var(--coral);
+        box-shadow: 0 0 0 3px rgba(255,107,107,0.1);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .user-table { font-size: 0.8rem; }
+        .user-table th, .user-table td { padding: 0.6rem 0.8rem; }
+        .hide-mobile { display: none !important; }
+    }
+
+    .confirm-modal {
+        position: fixed; inset: 0; z-index: 999;
+        background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+        display: none; align-items: center; justify-content: center;
+    }
+    .confirm-modal.open { display: flex; }
+    .confirm-box {
+        background: white; border-radius: 20px;
+        padding: 2rem; max-width: 400px; width: 90%;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Admin Header -->
+<div class="admin-header">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl flex items-center justify-center"
+                 style="background: linear-gradient(135deg, var(--coral), var(--gold));">
+                <i class="fi fi-rr-shield-check text-white text-xl"></i>
+            </div>
+            <div>
+                <h1 class="font-display text-2xl font-bold text-white">Admin Panel</h1>
+                <p class="text-gray-400 text-sm">Manage users, roles, and access</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Stats Row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="stat-card-admin">
+            <div class="stat-val" style="color: var(--coral);">{{ users|length }}</div>
+            <div class="text-gray-500 text-sm mt-1">Total Users</div>
+        </div>
+        <div class="stat-card-admin">
+            <div class="stat-val" style="color: var(--teal);">{{ users|selectattr('is_active')|list|length }}</div>
+            <div class="text-gray-500 text-sm mt-1">Active</div>
+        </div>
+        <div class="stat-card-admin">
+            <div class="stat-val" style="color: var(--gold);">{{ users|selectattr('is_admin')|list|length }}</div>
+            <div class="text-gray-500 text-sm mt-1">Admins</div>
+        </div>
+        <div class="stat-card-admin">
+            <div class="stat-val" style="color: #888;">{{ users|rejectattr('is_active')|list|length }}</div>
+            <div class="text-gray-500 text-sm mt-1">Deactivated</div>
+        </div>
+    </div>
+
+    <!-- Search + Table -->
+    <div class="user-table-wrapper">
+        <!-- Toolbar -->
+        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+            <div class="relative">
+                <i class="fi fi-rr-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="text" class="search-admin" placeholder="Search users..." id="user-search"
+                       onkeyup="filterUsers()">
+            </div>
+            <span class="text-gray-400 text-sm font-mono">{{ users|length }} users</span>
+        </div>
+
+        <table class="user-table" id="users-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th class="hide-mobile">Provider</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th class="hide-mobile">Joined</th>
+                    <th class="hide-mobile">Last Login</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr class="user-row" data-search="{{ user.email }} {{ user.full_name }}">
+                    <td>
+                        <div class="flex items-center gap-3">
+                            <div class="avatar-circle">
+                                {% if user.avatar_url %}
+                                    <img src="{{ user.avatar_url }}" alt="{{ user.display_name }}">
+                                {% else %}
+                                    {{ user.initials }}
+                                {% endif %}
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-800">{{ user.display_name }}</div>
+                                {% if user.id == session.get('user_id') %}
+                                    <span class="text-xs text-coral font-mono">(you)</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-gray-600">{{ user.email }}</td>
+                    <td class="hide-mobile">
+                        <span class="provider-badge">
+                            {% if 'google' in user.auth_provider %}
+                                <svg width="12" height="12" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                            {% endif %}
+                            {{ user.auth_provider|capitalize }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="role-badge {{ 'role-admin' if user.is_admin else 'role-user' }}">
+                            {% if user.is_admin %}
+                                <i class="fi fi-rr-shield-check" style="font-size:0.7rem"></i> Admin
+                            {% else %}
+                                <i class="fi fi-rr-user" style="font-size:0.7rem"></i> User
+                            {% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <span class="status-dot {{ 'status-active' if user.is_active else 'status-inactive' }}"></span>
+                            <span class="text-sm {{ 'text-teal' if user.is_active else 'text-gray-400' }}">
+                                {{ 'Active' if user.is_active else 'Inactive' }}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="hide-mobile text-gray-500 text-sm">
+                        {{ user.created_at.strftime('%b %d, %Y') if user.created_at else '—' }}
+                    </td>
+                    <td class="hide-mobile text-gray-500 text-sm">
+                        {{ user.last_login.strftime('%b %d, %Y %I:%M %p') if user.last_login else 'Never' }}
+                    </td>
+                    <td>
+                        {% if user.id != session.get('user_id') %}
+                        <div class="flex items-center gap-2">
+                            <form method="POST" action="{{ url_for('auth.toggle_user_role', user_id=user.id) }}" style="display:inline;">
+                                <button type="submit" class="action-btn tooltip" data-tip="{{ 'Demote to User' if user.is_admin else 'Promote to Admin' }}">
+                                    {% if user.is_admin %}👤{% else %}🛡️{% endif %}
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ url_for('auth.toggle_user_active', user_id=user.id) }}" style="display:inline;">
+                                <button type="submit" class="action-btn tooltip" data-tip="{{ 'Deactivate' if user.is_active else 'Activate' }}">
+                                    {% if user.is_active %}🚫{% else %}✅{% endif %}
+                                </button>
+                            </form>
+                            <button class="action-btn danger tooltip" data-tip="Delete User"
+                                    onclick="confirmDelete({{ user.id }}, '{{ user.display_name|e }}')">
+                                🗑️
+                            </button>
+                        </div>
+                        {% else %}
+                        <span class="text-gray-300 text-sm">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if not users %}
+        <div class="text-center py-16 text-gray-400">
+            <i class="fi fi-rr-users" style="font-size:2rem; opacity:0.3;"></i>
+            <p class="mt-3">No users found.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="confirm-modal" id="delete-modal">
+    <div class="confirm-box">
+        <div class="text-4xl mb-3">⚠️</div>
+        <h3 class="font-display text-xl font-bold mb-2">Delete User</h3>
+        <p class="text-gray-500 mb-5">Are you sure you want to permanently delete <strong id="delete-user-name"></strong>?</p>
+        <div class="flex gap-3 justify-center">
+            <button class="action-btn" onclick="closeDeleteModal()">Cancel</button>
+            <form method="POST" id="delete-form" style="display:inline;">
+                <button type="submit" class="btn-coral" style="padding: 0.5rem 1.2rem; font-size:0.9rem;">
+                    Yes, Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function filterUsers() {
+        const query = document.getElementById('user-search').value.toLowerCase();
+        document.querySelectorAll('.user-row').forEach(row => {
+            const text = row.getAttribute('data-search').toLowerCase();
+            row.style.display = text.includes(query) ? '' : 'none';
+        });
+    }
+
+    function confirmDelete(userId, userName) {
+        document.getElementById('delete-user-name').textContent = userName;
+        document.getElementById('delete-form').action = `/admin/users/${userId}/delete`;
+        document.getElementById('delete-modal').classList.add('open');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('delete-modal').classList.remove('open');
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('delete-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeDeleteModal();
+    });
+</script>
+{% endblock %}

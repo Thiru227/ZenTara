@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+{% block title %}Diff: {{ old_sla.version_label }} → {{ new_sla.version_label }} — {{ carrier.name }} — ZenTara{% endblock %}
+
+{% block extra_head %}
+<style>
+    .diff-bg {
+        background: radial-gradient(ellipse at top right, rgba(255,107,107,0.04) 0%, var(--cream) 50%);
+        min-height: 100vh;
+    }
+    .diff-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+    .diff-header {
+        background: linear-gradient(135deg, var(--charcoal) 0%, #2d2d44 100%);
+        color: white;
+        padding: 1.5rem 2rem;
+    }
+    .meta-badge {
+        display: inline-flex; align-items: center; gap: 0.3rem;
+        padding: 0.3rem 0.7rem; border-radius: 8px;
+        font-size: 0.72rem; background: rgba(255,255,255,0.12);
+        color: rgba(255,255,255,0.7);
+    }
+    .stat-pill {
+        display: inline-flex; align-items: center; gap: 0.3rem;
+        padding: 0.35rem 0.8rem; border-radius: 10px;
+        font-size: 0.82rem; font-weight: 600;
+        font-family: 'JetBrains Mono', monospace;
+    }
+    .stat-add { background: rgba(46,160,67,0.12); color: #2ea043; }
+    .stat-del { background: rgba(248,81,73,0.12); color: #f85149; }
+    .stat-ctx { background: rgba(0,0,0,0.05); color: #888; }
+
+    /* Diff lines */
+    .diff-block { margin-bottom: 0; }
+    .diff-block-header {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.72rem; color: #7c7ce0;
+        background: rgba(124,124,224,0.06);
+        padding: 0.4rem 1.2rem;
+        border-top: 1px solid rgba(0,0,0,0.04);
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+    .diff-line {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem; line-height: 1.6;
+        padding: 0.15rem 1.2rem 0.15rem 2.5rem;
+        position: relative;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    .diff-line.add {
+        background: rgba(46,160,67,0.08);
+        border-left: 3px solid #2ea043;
+    }
+    .diff-line.add::before {
+        content: '+'; position: absolute; left: 0.8rem;
+        color: #2ea043; font-weight: 700;
+    }
+    .diff-line.del {
+        background: rgba(248,81,73,0.08);
+        border-left: 3px solid #f85149;
+        text-decoration: line-through;
+        opacity: 0.7;
+    }
+    .diff-line.del::before {
+        content: '−'; position: absolute; left: 0.8rem;
+        color: #f85149; font-weight: 700;
+    }
+    .diff-line.ctx {
+        color: #666;
+        border-left: 3px solid transparent;
+    }
+    .diff-body {
+        max-height: 65vh; overflow-y: auto;
+    }
+
+    /* Clause changes */
+    .clause-change {
+        padding: 0.8rem 1rem; border-radius: 12px;
+        margin-bottom: 0.6rem; border: 1px solid;
+        transition: all 0.2s;
+    }
+    .clause-change:hover { transform: translateX(3px); }
+    .clause-change.added {
+        background: rgba(46,160,67,0.04);
+        border-color: rgba(46,160,67,0.2);
+    }
+    .clause-change.removed {
+        background: rgba(248,81,73,0.04);
+        border-color: rgba(248,81,73,0.2);
+    }
+    .clause-change.changed {
+        background: rgba(255,179,71,0.04);
+        border-color: rgba(255,179,71,0.3);
+    }
+    .change-badge {
+        font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.5px; padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+    }
+    .change-badge.added { background: rgba(46,160,67,0.15); color: #2ea043; }
+    .change-badge.removed { background: rgba(248,81,73,0.15); color: #f85149; }
+    .change-badge.changed { background: rgba(255,179,71,0.15); color: #c98a00; }
+
+    .tab-btn {
+        padding: 0.5rem 1.2rem; border-radius: 10px;
+        font-size: 0.82rem; font-weight: 600; border: none;
+        cursor: pointer; transition: all 0.2s;
+        font-family: 'DM Sans', sans-serif;
+    }
+    .tab-btn.active { background: var(--coral); color: white; }
+    .tab-btn:not(.active) { background: rgba(0,0,0,0.04); color: #888; }
+    .tab-btn:not(.active):hover { background: rgba(255,107,107,0.1); color: var(--coral); }
+
+    .identical-banner {
+        text-align: center; padding: 3rem;
+        color: #2ea043;
+    }
+    .identical-banner .icon { font-size: 3rem; margin-bottom: 0.5rem; }
+
+    .arrow-icon {
+        display: inline-flex; align-items: center;
+        font-size: 1.2rem; color: var(--coral);
+        margin: 0 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="diff-bg">
+<div class="max-w-5xl mx-auto px-4 py-6">
+
+    <!-- Breadcrumb -->
+    <div class="text-sm text-gray-400 mb-4">
+        <a href="/dashboard" style="color: var(--coral);">Dashboard</a> /
+        <a href="/carriers" style="color: var(--coral);">Carriers</a> /
+        <a href="/carrier/{{ carrier.id }}" style="color: var(--coral);">{{ carrier.name }}</a> /
+        Contract Diff
+    </div>
+
+    <div class="diff-card">
+        <!-- Header -->
+        <div class="diff-header">
+            <div class="flex items-center justify-between mb-3">
+                <h1 class="font-display text-2xl font-bold">📊 Contract Diff</h1>
+                <div class="flex gap-2">
+                    <a href="/carrier/{{ carrier.id }}" class="btn-ghost text-sm" style="color: white; border-color: rgba(255,255,255,0.3);">
+                        ← Back to {{ carrier.name }}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Version badges -->
+            <div class="flex items-center gap-2 flex-wrap">
+                <div class="meta-badge" style="background: rgba(248,81,73,0.2); color: #ffb0ac;">
+                    🔴 {{ old_sla.version_label }} · {{ old_sla.original_filename }}
+                </div>
+                <span class="arrow-icon" style="color: rgba(255,255,255,0.5);">→</span>
+                <div class="meta-badge" style="background: rgba(46,160,67,0.2); color: #7ee787;">
+                    🟢 {{ new_sla.version_label }} · {{ new_sla.original_filename }}
+                </div>
+
+                <div class="ml-auto flex gap-2">
+                    <span class="stat-pill stat-add">+{{ added }} added</span>
+                    <span class="stat-pill stat-del">−{{ removed }} removed</span>
+                    <span class="stat-pill stat-ctx">{{ unchanged }} unchanged</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="px-6 py-3 flex items-center gap-3 border-b" style="border-color: rgba(0,0,0,0.06);">
+            <button class="tab-btn active" onclick="showDiffTab('text')" id="dtab-text">Text Diff</button>
+            {% if clause_changes %}
+            <button class="tab-btn" onclick="showDiffTab('clauses')" id="dtab-clauses">
+                Clause Changes ({{ clause_changes|length }})
+            </button>
+            {% endif %}
+        </div>
+
+        <!-- Text Diff Panel -->
+        <div class="diff-body" id="dpanel-text">
+            {% if is_identical %}
+            <div class="identical-banner">
+                <div class="icon">✅</div>
+                <h3 class="font-display text-xl font-bold" style="color: #2ea043;">Documents are identical</h3>
+                <p class="text-gray-500 text-sm mt-1">No text differences found between the two versions.</p>
+            </div>
+            {% else %}
+                {% for block in diff_blocks %}
+                <div class="diff-block">
+                    <div class="diff-block-header">{{ block.header }}</div>
+                    {% for line in block.lines %}
+                    <div class="diff-line {{ line.type }}">{{ line.text }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Clause Changes Panel -->
+        {% if clause_changes %}
+        <div class="diff-body" id="dpanel-clauses" style="display: none; padding: 1.5rem;">
+            <div class="mb-4">
+                <h3 class="font-display text-lg font-bold" style="color: var(--charcoal);">Clause-Level Changes</h3>
+                <p class="text-sm text-gray-500">AI-detected differences in extracted contract clauses</p>
+            </div>
+            {% for change in clause_changes %}
+            <div class="clause-change {{ change.type }}">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="change-badge {{ change.type }}">{{ change.type }}</span>
+                    <span class="text-xs font-mono text-gray-400">{{ change.clause_type }} · §{{ change.clause_ref }}</span>
+                    <span class="font-semibold text-sm" style="color: var(--charcoal);">
+                        {{ change.new_title or change.old_title }}
+                    </span>
+                </div>
+                {% if change.type == 'changed' and change.old_value and change.new_value %}
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="text-xs font-mono px-2 py-0.5 rounded" style="background: rgba(248,81,73,0.1); color: #f85149; text-decoration: line-through;">
+                        {{ change.old_value }}
+                    </span>
+                    <span class="text-gray-400">→</span>
+                    <span class="text-xs font-mono px-2 py-0.5 rounded font-bold" style="background: rgba(46,160,67,0.1); color: #2ea043;">
+                        {{ change.new_value }}
+                    </span>
+                </div>
+                {% elif change.type == 'added' and change.new_value %}
+                <div class="text-xs font-mono mt-1" style="color: #2ea043;">+ {{ change.new_value }}</div>
+                {% elif change.type == 'removed' and change.old_value %}
+                <div class="text-xs font-mono mt-1" style="color: #f85149; text-decoration: line-through;">− {{ change.old_value }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+</div>
+
+<script>
+function showDiffTab(tab) {
+    document.querySelectorAll('[id^="dpanel-"]').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('dpanel-' + tab).style.display = 'block';
+    document.getElementById('dtab-' + tab).classList.add('active');
+}
+</script>
+{% endblock %}

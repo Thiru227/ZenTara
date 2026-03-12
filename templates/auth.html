@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Sign Up' if mode == 'signup' else 'Log In' }} — ZenTara{% endblock %}
+
+{% block extra_head %}
+<style>
+    body { background: var(--charcoal); overflow-x: hidden; }
+
+    .auth-bg {
+        position: fixed; inset: 0; z-index: 0;
+        background:
+            radial-gradient(ellipse at 30% 20%, rgba(255,107,107,0.18) 0%, transparent 60%),
+            radial-gradient(ellipse at 70% 80%, rgba(78,205,196,0.12) 0%, transparent 60%),
+            radial-gradient(ellipse at 50% 50%, rgba(255,179,71,0.1) 0%, transparent 70%),
+            var(--charcoal);
+    }
+
+    .auth-card {
+        position: relative; z-index: 10;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+        border-radius: 24px;
+        padding: 2.5rem;
+        max-width: 440px;
+        width: 100%;
+        animation: fade-in-up 0.7s ease forwards;
+    }
+
+    @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(30px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-input {
+        width: 100%;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 12px;
+        padding: 0.85rem 1rem 0.85rem 2.8rem;
+        color: white;
+        font-size: 0.95rem;
+        font-family: 'DM Sans', sans-serif;
+        transition: all 0.3s ease;
+        outline: none;
+    }
+    .auth-input::placeholder { color: rgba(255,255,255,0.35); }
+    .auth-input:focus {
+        border-color: var(--coral);
+        background: rgba(255,255,255,0.1);
+        box-shadow: 0 0 0 3px rgba(255,107,107,0.15);
+    }
+
+    .input-group {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+    .input-icon {
+        position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%);
+        color: rgba(255,255,255,0.35); font-size: 1rem;
+        pointer-events: none; transition: color 0.3s;
+    }
+    .input-group:focus-within .input-icon { color: var(--coral); }
+
+    .btn-submit {
+        width: 100%;
+        background: linear-gradient(135deg, var(--coral), #ff8e53);
+        color: white; border: none;
+        padding: 0.9rem; border-radius: 12px;
+        font-size: 1rem; font-weight: 700;
+        font-family: 'DM Sans', sans-serif;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative; overflow: hidden;
+    }
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(255,107,107,0.45);
+    }
+    .btn-submit:active { transform: translateY(0); }
+
+    .btn-google {
+        width: 100%;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: white;
+        padding: 0.85rem; border-radius: 12px;
+        font-size: 0.95rem; font-weight: 600;
+        font-family: 'DM Sans', sans-serif;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+        text-decoration: none;
+    }
+    .btn-google:hover {
+        background: rgba(255,255,255,0.14);
+        border-color: rgba(255,255,255,0.25);
+        transform: translateY(-1px);
+    }
+
+    .divider {
+        display: flex; align-items: center; gap: 1rem;
+        color: rgba(255,255,255,0.25);
+        font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;
+        margin: 1.4rem 0;
+    }
+    .divider::before, .divider::after {
+        content: ''; flex: 1; height: 1px;
+        background: rgba(255,255,255,0.12);
+    }
+
+    .toggle-link {
+        color: var(--coral);
+        text-decoration: none; font-weight: 600;
+        transition: color 0.2s;
+    }
+    .toggle-link:hover { color: var(--gold); text-decoration: underline; }
+
+    .password-toggle {
+        position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+        background: none; border: none; color: rgba(255,255,255,0.35);
+        cursor: pointer; font-size: 1rem; transition: color 0.2s;
+        padding: 0.2rem;
+    }
+    .password-toggle:hover { color: var(--coral); }
+
+    /* Tara glow behind card */
+    .tara-auth-glow {
+        position: absolute;
+        width: 300px; height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,107,107,0.15) 0%, transparent 70%);
+        top: -80px; left: 50%; transform: translateX(-50%);
+        animation: pulse-glow 3s ease-in-out infinite;
+        z-index: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-bg"></div>
+
+<div class="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative" style="z-index: 5;">
+
+    <!-- Tara greeting -->
+    <div class="relative mb-6" style="z-index: 10;">
+        <div class="tara-auth-glow"></div>
+        <img src="{{ url_for('static', filename='tara/tara_meditation.png') }}"
+             alt="Tara" class="h-28 object-contain tara-float relative z-10 drop-shadow-2xl">
+    </div>
+
+    <!-- Auth Card -->
+    <div class="auth-card">
+
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <h1 class="font-display text-3xl font-bold text-white mb-1">
+                {% if mode == 'signup' %}Create Account{% else %}Welcome Back{% endif %}
+            </h1>
+            <p class="text-gray-400 text-sm">
+                {% if mode == 'signup' %}
+                    Join ZenTara — your contracts deserve peace.
+                {% else %}
+                    Log in to continue your zen journey.
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Google OAuth Button -->
+        <a href="{{ url_for('auth.google_login') }}" class="btn-google" id="google-signin-btn">
+            <svg width="20" height="20" viewBox="0 0 48 48">
+                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            Continue with Google
+        </a>
+
+        <div class="divider">or</div>
+
+        <!-- Email/Password Form -->
+        <form method="POST" action="{{ url_for('auth.signup') if mode == 'signup' else url_for('auth.login') }}" autocomplete="on">
+            <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
+
+            {% if mode == 'signup' %}
+            <div class="input-group">
+                <i class="fi fi-rr-user input-icon"></i>
+                <input type="text" name="full_name" class="auth-input" placeholder="Full Name"
+                       value="{{ form_name|default('') }}" required autocomplete="name" id="signup-name">
+            </div>
+            {% endif %}
+
+            <div class="input-group">
+                <i class="fi fi-rr-envelope input-icon"></i>
+                <input type="email" name="email" class="auth-input" placeholder="Email address"
+                       value="{{ form_email|default('') }}" required autocomplete="email" id="auth-email">
+            </div>
+
+            <div class="input-group">
+                <i class="fi fi-rr-lock input-icon"></i>
+                <input type="password" name="password" class="auth-input" placeholder="Password"
+                       required minlength="6" autocomplete="{{ 'new-password' if mode == 'signup' else 'current-password' }}"
+                       id="auth-password">
+                <button type="button" class="password-toggle" onclick="togglePassword('auth-password', this)" aria-label="Toggle password visibility">
+                    <i class="fi fi-rr-eye"></i>
+                </button>
+            </div>
+
+            {% if mode == 'signup' %}
+            <div class="input-group">
+                <i class="fi fi-rr-lock input-icon"></i>
+                <input type="password" name="confirm_password" class="auth-input" placeholder="Confirm Password"
+                       required minlength="6" autocomplete="new-password" id="auth-confirm-password">
+                <button type="button" class="password-toggle" onclick="togglePassword('auth-confirm-password', this)" aria-label="Toggle password visibility">
+                    <i class="fi fi-rr-eye"></i>
+                </button>
+            </div>
+            {% endif %}
+
+            <button type="submit" class="btn-submit" id="auth-submit-btn" style="margin-top: 0.5rem;">
+                {% if mode == 'signup' %}🧘 Create Account{% else %}🧘 Log In{% endif %}
+            </button>
+        </form>
+
+        <!-- Toggle Login/Signup -->
+        <p class="text-center text-gray-400 text-sm mt-5">
+            {% if mode == 'signup' %}
+                Already have an account?
+                <a href="{{ url_for('auth.login') }}" class="toggle-link">Log In</a>
+            {% else %}
+                Don't have an account?
+                <a href="{{ url_for('auth.signup') }}" class="toggle-link">Sign Up</a>
+            {% endif %}
+        </p>
+
+    </div>
+
+    <!-- Back to landing -->
+    <a href="/" class="text-gray-500 text-sm mt-6 hover:text-coral transition-colors" style="z-index: 10; position: relative;">
+        ← Back to Home
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'fi fi-rr-eye-crossed';
+        } else {
+            input.type = 'password';
+            icon.className = 'fi fi-rr-eye';
+        }
+    }
+</script>
+{% endblock %}

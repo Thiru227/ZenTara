@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+{% block title %}{{ sla.version_label }} — {{ carrier.name }} SLA — ZenTara{% endblock %}
+
+{% block extra_head %}
+<style>
+    .viewer-bg {
+        background: radial-gradient(ellipse at top left, rgba(255,107,107,0.04) 0%, var(--cream) 50%);
+        min-height: 100vh;
+    }
+    .doc-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+    .doc-header {
+        background: linear-gradient(135deg, var(--charcoal) 0%, #2d2d44 100%);
+        color: white;
+        padding: 1.5rem 2rem;
+    }
+    .doc-body {
+        padding: 2rem;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    .doc-text {
+        font-family: 'JetBrains Mono', 'Consolas', monospace;
+        font-size: 0.82rem;
+        line-height: 1.8;
+        color: #374151;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        tab-size: 4;
+    }
+    .clause-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 10px;
+        font-size: 0.78rem;
+        background: rgba(255,107,107,0.06);
+        border: 1px solid rgba(255,107,107,0.15);
+        color: #555;
+        transition: all 0.2s;
+    }
+    .clause-chip:hover {
+        background: rgba(255,107,107,0.12);
+        border-color: var(--coral);
+    }
+    .clause-chip .type {
+        font-weight: 700;
+        color: var(--coral);
+        text-transform: uppercase;
+        font-size: 0.65rem;
+        letter-spacing: 0.5px;
+    }
+    .clause-chip .value {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 600;
+        color: var(--charcoal);
+    }
+    .meta-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.3rem 0.7rem;
+        border-radius: 8px;
+        font-size: 0.72rem;
+        background: rgba(255,255,255,0.12);
+        color: rgba(255,255,255,0.7);
+    }
+    .search-input {
+        border: 1.5px solid rgba(0,0,0,0.1);
+        border-radius: 10px;
+        padding: 0.5rem 1rem 0.5rem 2.2rem;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.85rem;
+        outline: none;
+        width: 100%;
+        transition: border 0.2s;
+        background: white;
+    }
+    .search-input:focus { border-color: var(--coral); }
+    .tab-btn {
+        padding: 0.5rem 1.2rem;
+        border-radius: 10px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: 'DM Sans', sans-serif;
+    }
+    .tab-btn.active {
+        background: var(--coral);
+        color: white;
+    }
+    .tab-btn:not(.active) {
+        background: rgba(0,0,0,0.04);
+        color: #888;
+    }
+    .tab-btn:not(.active):hover {
+        background: rgba(255,107,107,0.1);
+        color: var(--coral);
+    }
+    .clause-detail {
+        padding: 1rem 1.2rem;
+        border-radius: 12px;
+        border: 1px solid rgba(0,0,0,0.06);
+        background: #fafafa;
+        margin-bottom: 0.75rem;
+        transition: all 0.2s;
+    }
+    .clause-detail:hover {
+        border-color: rgba(255,107,107,0.25);
+        background: rgba(255,107,107,0.02);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="viewer-bg">
+<div class="max-w-5xl mx-auto px-4 py-6">
+
+    <!-- Breadcrumb -->
+    <div class="text-sm text-gray-400 mb-4">
+        <a href="/dashboard" style="color: var(--coral);">Dashboard</a> /
+        <a href="/carriers" style="color: var(--coral);">Carriers</a> /
+        <a href="/carrier/{{ carrier.id }}" style="color: var(--coral);">{{ carrier.name }}</a> /
+        {{ sla.version_label }}
+    </div>
+
+    <!-- Document Header Card -->
+    <div class="doc-card mb-6">
+        <div class="doc-header">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="font-display text-2xl font-bold">📄 {{ sla.original_filename or sla.filename }}</h1>
+                    <div class="flex items-center gap-3 mt-2">
+                        <span class="meta-badge">{{ sla.version_label }}</span>
+                        <span class="meta-badge">
+                            {% set logo_slug = carrier.name|lower|replace(' ', '') %}
+                            {% set logo_url = url_for('static', filename='logos/' + logo_slug + '.png') %}
+                            <img src="{{ logo_url }}" alt="{{ carrier.name }}" width="14" height="14" class="object-contain mr-1" onerror="this.style.display='none'">
+                            {{ carrier.name }}
+                        </span>
+                        <span class="meta-badge">{{ sla.page_count }} pages</span>
+                        <span class="meta-badge">{{ (sla.file_size / 1024)|int if sla.file_size else '?' }} KB</span>
+                        {% if sla.is_active %}
+                        <span class="meta-badge" style="background: rgba(78,205,196,0.3); color: white;">✓ Active</span>
+                        {% endif %}
+                        <span class="meta-badge">
+                            {{ sla.upload_date.strftime('%b %d, %Y at %I:%M %p') if sla.upload_date else 'Unknown' }}
+                        </span>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <a href="/carrier/{{ carrier.id }}" class="btn-ghost text-sm" style="color: white; border-color: rgba(255,255,255,0.3);">
+                        ← Back
+                    </a>
+                    <a href="/chat?q=Summarize+contract+{{ sla.version_label }}+for+{{ carrier.name }}" class="btn-coral text-sm" style="text-decoration:none;">
+                        <i class="fi fi-rr-comment-alt" style="margin-right:4px"></i> <b><i>Ask Tara</i></b>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs + Search -->
+        <div class="px-6 py-3 flex items-center gap-4 border-b" style="border-color: rgba(0,0,0,0.06);">
+            <button class="tab-btn active" onclick="showTab('text')" id="tab-text">Full Text</button>
+            <button class="tab-btn" onclick="showTab('clauses')" id="tab-clauses">
+                Extracted Clauses {% if clauses %}({{ clauses|length }}){% endif %}
+            </button>
+            {% if sla.clause_summary %}
+            <button class="tab-btn" onclick="showTab('summary')" id="tab-summary">AI Summary</button>
+            {% endif %}
+            <div class="ml-auto relative" style="width: 250px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"
+                     style="position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%);">
+                    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <input type="text" class="search-input" placeholder="Search in document..."
+                       oninput="searchInDocument(this.value)">
+            </div>
+        </div>
+
+        <!-- Tab: Full Text -->
+        <div class="doc-body" id="panel-text">
+            {% if sla.extracted_text %}
+            <div class="doc-text" id="doc-text-content">{{ sla.extracted_text }}</div>
+            {% else %}
+            <div class="text-center py-12 text-gray-400">
+                <div class="text-4xl mb-3">📭</div>
+                <p class="font-semibold">No extracted text available</p>
+                <p class="text-sm mt-1">This document hasn't been processed yet, or the text couldn't be extracted.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Tab: Clauses -->
+        <div class="doc-body" id="panel-clauses" style="display: none;">
+            {% if clauses %}
+            <div class="flex flex-wrap gap-2 mb-4">
+                {% for clause in clauses %}
+                <div class="clause-chip">
+                    <span class="type">{{ clause.clause_type }}</span>
+                    {% if clause.clause_number %}<span>§{{ clause.clause_number }}</span>{% endif %}
+                    {% if clause.extracted_value %}<span class="value">{{ clause.extracted_value }}</span>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            {% for clause in clauses %}
+            <div class="clause-detail">
+                <div class="flex items-start gap-3">
+                    <span class="text-xl">{{ clause.icon }}</span>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-semibold text-sm" style="color: var(--charcoal);">{{ clause.clause_title }}</span>
+                            {% if clause.clause_number %}
+                            <span class="mono text-xs text-gray-400">§{{ clause.clause_number }}</span>
+                            {% endif %}
+                            <span class="text-xs text-gray-400">p.{{ clause.page_number }}</span>
+                            {% if clause.extracted_value %}
+                            <span class="mono text-xs font-bold px-2 py-0.5 rounded"
+                                  style="background: rgba(255,107,107,0.1); color: var(--coral);">
+                                {{ clause.extracted_value }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">{{ clause.clause_text }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="text-center py-8 text-gray-400">
+                <p>No clauses extracted yet.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Tab: Summary -->
+        {% if sla.clause_summary %}
+        <div class="doc-body" id="panel-summary" style="display: none;">
+            <div class="prose" style="font-size: 0.92rem; line-height: 1.7; color: #555;">
+                <p class="italic" style="font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--charcoal); margin-bottom: 1rem;">
+                    Tara's Summary
+                </p>
+                <p>{{ sla.clause_summary }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+</div>
+
+<script>
+function showTab(tab) {
+    // Hide all panels
+    document.querySelectorAll('[id^="panel-"]').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    // Show selected
+    document.getElementById('panel-' + tab).style.display = 'block';
+    document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function searchInDocument(query) {
+    const content = document.getElementById('doc-text-content');
+    if (!content) return;
+
+    // Reset highlights
+    const raw = content.getAttribute('data-raw') || content.textContent;
+    if (!content.getAttribute('data-raw')) {
+        content.setAttribute('data-raw', content.textContent);
+    }
+
+    if (!query || query.length < 2) {
+        content.textContent = raw;
+        return;
+    }
+
+    // Highlight matches
+    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    content.innerHTML = raw.replace(regex,
+        '<mark style="background: rgba(255,107,107,0.25); padding: 0.1em 0.2em; border-radius: 3px;">$1</mark>'
+    );
+}
+</script>
+{% endblock %}

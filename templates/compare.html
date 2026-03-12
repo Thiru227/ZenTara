@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+{% block title %}Compare — ZenTara{% endblock %}
+
+{% block extra_head %}
+<style>
+    .card { background: white; border-radius: 20px; padding: 1.5rem; box-shadow: 0 2px 20px rgba(0,0,0,0.06); margin-bottom: 1.5rem; }
+    .mode-tab { padding: 0.7rem 1.4rem; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; border: none; }
+    .mode-tab.active { background: var(--coral); color: white; box-shadow: 0 4px 15px rgba(255,107,107,0.3); }
+    .mode-tab.inactive { background: rgba(255,107,107,0.08); color: var(--coral); }
+    
+    .compare-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: rgba(0,0,0,0.06); border-radius: 10px; overflow: hidden; }
+    .compare-cell { padding: 0.9rem 1rem; background: white; font-size: 0.875rem; }
+    .compare-cell.label { background: rgba(255,107,107,0.04); font-weight: 600; color: #555; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .compare-cell.carrier1-win { background: rgba(78,205,196,0.08); color: #2a8a7e; font-weight: 600; }
+    .compare-cell.carrier2-win { background: rgba(78,205,196,0.08); color: #2a8a7e; font-weight: 600; }
+    .compare-cell.equal { color: #888; }
+
+    .selector-card { 
+        border: 2px solid rgba(255,107,107,0.2);
+        border-radius: 16px;
+        padding: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+        background: white;
+    }
+    .selector-card:hover, .selector-card.selected {
+        border-color: var(--coral);
+        background: rgba(255,107,107,0.03);
+    }
+    .carrier-select {
+        border: 1.5px solid rgba(0,0,0,0.12);
+        border-radius: 10px;
+        padding: 0.7rem 1rem;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.9rem;
+        outline: none;
+        width: 100%;
+        background: white;
+        cursor: pointer;
+        transition: border 0.2s;
+    }
+    .carrier-select:focus { border-color: var(--coral); }
+
+    .diff-card { border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; border-left: 4px solid; }
+    .diff-added   { border-color: var(--teal);     background: rgba(78,205,196,0.05); }
+    .diff-removed { border-color: var(--critical); background: rgba(255,59,48,0.05); }
+    .diff-modified { border-color: var(--gold);   background: rgba(255,179,71,0.05); }
+
+    .new-badge    { background: rgba(78,205,196,0.15); color: #2a8a7e; }
+    .removed-badge { text-decoration: line-through; color: #cc2b22; }
+    .changed-badge { background: rgba(255,179,71,0.15); color: #b37a00; }
+
+    .tara-warrior {
+        filter: hue-rotate(0deg) drop-shadow(0 8px 20px rgba(255,107,107,0.3));
+        object-fit: cover;
+        object-position: 65% 0;
+    }
+    .vs-divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--coral);
+        background: rgba(255,107,107,0.1);
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-6">
+
+    <!-- Header with Warrior Tara -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="font-display text-3xl font-bold" style="color: var(--charcoal);"><i class="fi fi-rr-balance-scale-right" style="margin-right:6px"></i> Compare Mode</h1>
+            <p class="text-gray-500 mt-1">Side-by-side carrier analysis & version diff</p>
+        </div>
+        <div class="relative">
+            <img src="{{ url_for('static', filename='tara/tara_warrior.png') }}"
+                 alt="Tara Warrior"
+                 class="h-20 object-contain tara-warrior">
+            <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap"
+                 style="background: rgba(255,107,107,0.1); color: var(--coral);">
+                Warrior Mode 🥋
+            </div>
+        </div>
+    </div>
+
+    <!-- Mode Tabs -->
+    <div class="flex gap-3 mb-6">
+        <button class="mode-tab active" id="tab-carriers" onclick="switchMode('carriers')">
+            <i class="fi fi-rr-truck-side" style="margin-right:4px"></i> Compare Carriers
+        </button>
+        <button class="mode-tab inactive" id="tab-versions" onclick="switchMode('versions')">
+            📄 Compare Versions
+        </button>
+    </div>
+
+    <!-- ============ MODE A: COMPARE CARRIERS ============ -->
+    <div id="mode-carriers">
+        <div class="card">
+            <h2 class="font-display text-xl font-bold mb-4" style="color: var(--charcoal);">Select Two Carriers</h2>
+
+            <div class="flex items-center gap-4 mb-6">
+                <div class="flex-1">
+                    <label class="text-xs font-medium text-gray-500 mb-1 block">Carrier 1</label>
+                    <select id="carrier1-select" class="carrier-select">
+                        <option value="">— Select Carrier —</option>
+                        {% for c in carriers %}
+                        <option value="{{ c.id }}" {% if carrier1 and carrier1.id == c.id %}selected{% endif %}>{{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="vs-divider mt-5">VS</div>
+                <div class="flex-1">
+                    <label class="text-xs font-medium text-gray-500 mb-1 block">Carrier 2</label>
+                    <select id="carrier2-select" class="carrier-select">
+                        <option value="">— Select Carrier —</option>
+                        {% for c in carriers %}
+                        <option value="{{ c.id }}" {% if carrier2 and carrier2.id == c.id %}selected{% endif %}>{{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mt-5">
+                    <button class="btn-coral" onclick="compareCarriers()" id="compare-carriers-btn">
+                        Compare →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div id="carrier-compare-results" class="hidden">
+                <!-- Table will be injected here -->
+            </div>
+
+            <!-- Loading -->
+            <div id="carrier-compare-loading" class="hidden text-center py-8">
+                <img src="{{ url_for('static', filename='tara/tara_meditation.png') }}" class="h-16 mx-auto mb-3 tara-breathe">
+                <p class="text-gray-400">Tara is reading both contracts...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MODE B: COMPARE VERSIONS ============ -->
+    <div id="mode-versions" class="hidden">
+        <div class="card">
+            <h2 class="font-display text-xl font-bold mb-4" style="color: var(--charcoal);">Select Carrier & Versions</h2>
+
+            <div class="mb-4">
+                <label class="text-xs font-medium text-gray-500 mb-1 block">Carrier</label>
+                <select id="version-carrier-select" class="carrier-select" style="max-width: 300px;"
+                        onchange="loadVersions(this.value)">
+                    <option value="">— Select Carrier —</option>
+                    {% for c in carriers %}
+                    <option value="{{ c.id }}">{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="version-selectors-visible" class="flex items-center gap-4 mb-6 transition-opacity opacity-50">
+                <div class="flex-1">
+                    <label class="text-xs font-medium text-gray-500 mb-1 block">Older Version</label>
+                    <select id="version1-select2" class="carrier-select" disabled>
+                        <option value="">— Select Carrier First —</option>
+                    </select>
+                </div>
+                <div class="vs-divider">→</div>
+                <div class="flex-1">
+                    <label class="text-xs font-medium text-gray-500 mb-1 block">Newer Version</label>
+                    <select id="version2-select2" class="carrier-select" disabled>
+                        <option value="">— Select Carrier First —</option>
+                    </select>
+                </div>
+                <div class="mt-5">
+                    <button id="compare-versions-btn" class="btn-coral" onclick="compareVersions()" disabled>Diff →</button>
+                </div>
+            </div>
+
+            <!-- Version diff results -->
+            <div id="version-compare-results" class="hidden"></div>
+            <div id="version-compare-loading" class="hidden text-center py-8">
+                <img src="{{ url_for('static', filename='tara/tara_meditation.png') }}" class="h-16 mx-auto mb-3 tara-breathe">
+                <p class="text-gray-400">Analyzing version differences...</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function switchMode(mode) {
+    const carriers = document.getElementById('mode-carriers');
+    const versions = document.getElementById('mode-versions');
+    const tabC = document.getElementById('tab-carriers');
+    const tabV = document.getElementById('tab-versions');
+
+    if (mode === 'carriers') {
+        carriers.classList.remove('hidden');
+        versions.classList.add('hidden');
+        tabC.classList.replace('inactive', 'active');
+        tabV.classList.replace('active', 'inactive');
+    } else {
+        carriers.classList.add('hidden');
+        versions.classList.remove('hidden');
+        tabC.classList.replace('active', 'inactive');
+        tabV.classList.replace('inactive', 'active');
+    }
+}
+
+async function compareCarriers() {
+    const c1 = document.getElementById('carrier1-select').value;
+    const c2 = document.getElementById('carrier2-select').value;
+    if (!c1 || !c2) { alert('Please select two carriers.'); return; }
+    if (c1 === c2) { alert('Please select two different carriers.'); return; }
+
+    document.getElementById('carrier-compare-results').classList.add('hidden');
+    document.getElementById('carrier-compare-loading').classList.remove('hidden');
+
+    try {
+        const res = await fetch('/compare/carriers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ carrier1_id: parseInt(c1), carrier2_id: parseInt(c2) })
+        });
+        const data = await res.json();
+        document.getElementById('carrier-compare-loading').classList.add('hidden');
+        renderCarrierComparison(data);
+    } catch(e) {
+        document.getElementById('carrier-compare-loading').classList.add('hidden');
+        alert('Comparison failed. Please try again.');
+    }
+}
+
+function renderCarrierComparison(data) {
+    const c1 = data.carrier1.name;
+    const c2 = data.carrier2.name;
+    const container = document.getElementById('carrier-compare-results');
+
+    let html = `
+    <div class="mb-4">
+        <div class="compare-row">
+            <div class="compare-cell label">Metric</div>
+            <div class="compare-cell label text-center">${c1}</div>
+            <div class="compare-cell label text-center">${c2}</div>
+        </div>`;
+
+    data.rows.forEach(row => {
+        const c1Win = row.advantage === 'carrier1';
+        const c2Win = row.advantage === 'carrier2';
+        html += `
+        <div class="compare-row">
+            <div class="compare-cell label">${row.label}</div>
+            <div class="compare-cell text-center ${c1Win ? 'carrier1-win' : row.advantage === 'equal' ? 'equal' : ''}">
+                ${c1Win ? '<i class="fi fi-rr-trophy" style="color:var(--gold);margin-right:2px"></i> ' : ''}${row.carrier1_value || 'N/A'}
+            </div>
+            <div class="compare-cell text-center ${c2Win ? 'carrier2-win' : row.advantage === 'equal' ? 'equal' : ''}">
+                ${c2Win ? '<i class="fi fi-rr-trophy" style="color:var(--gold);margin-right:2px"></i> ' : ''}${row.carrier2_value || 'N/A'}
+            </div>
+        </div>`;
+    });
+
+    html += `</div>`;
+
+    if (data.ai_summary) {
+        html += `
+        <div class="mt-4 p-4 rounded-xl" style="background: rgba(255,107,107,0.05); border: 1px solid rgba(255,107,107,0.15);">
+            <div class="flex items-start gap-3">
+                <img src="/static/tara/tara_meditation.png" class="w-8 h-8 object-contain rounded-full ring-1 ring-coral flex-shrink-0">
+                <div>
+                    <div class="text-xs font-medium mb-1" style="color: var(--coral);">Tara's Analysis</div>
+                    <p class="text-sm text-gray-600 leading-relaxed italic">"${data.ai_summary}"</p>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    container.innerHTML = html;
+    container.classList.remove('hidden');
+}
+
+async function loadVersions(carrierId) {
+    if (!carrierId) return;
+    const res = await fetch(`/api/carrier/${carrierId}/versions`);
+    const versions = await res.json();
+
+    const sel1 = document.getElementById('version1-select2');
+    const sel2 = document.getElementById('version2-select2');
+    const btn = document.getElementById('compare-versions-btn');
+    const container = document.getElementById('version-selectors-visible');
+    
+    [sel1, sel2].forEach(sel => {
+        sel.disabled = false;
+        sel.innerHTML = versions.map(v =>
+            `<option value="${v.id}">${v.version_label} — ${v.upload_date ? v.upload_date.substring(0,10) : ''}</option>`
+        ).join('');
+    });
+    
+    btn.disabled = false;
+    container.classList.remove('opacity-50');
+}
+
+async function compareVersions() {
+    const v1 = document.getElementById('version1-select2').value;
+    const v2 = document.getElementById('version2-select2').value;
+    if (!v1 || !v2 || v1 === v2) { alert('Please select two different versions.'); return; }
+
+    document.getElementById('version-compare-results').classList.add('hidden');
+    document.getElementById('version-compare-loading').classList.remove('hidden');
+
+    try {
+        const res = await fetch('/compare/versions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sla_v1_id: parseInt(v1), sla_v2_id: parseInt(v2) })
+        });
+        const data = await res.json();
+        document.getElementById('version-compare-loading').classList.add('hidden');
+        renderVersionComparison(data);
+    } catch(e) {
+        document.getElementById('version-compare-loading').classList.add('hidden');
+        alert('Comparison failed.');
+    }
+}
+
+function renderVersionComparison(data) {
+    const container = document.getElementById('version-compare-results');
+    const isNegative = data.tara_reaction === 'stressed';
+
+    let html = `
+    <div class="flex items-center gap-3 mb-4 p-3 rounded-xl" style="background: ${isNegative ? 'rgba(255,59,48,0.06)' : 'rgba(78,205,196,0.06)'};">
+        <img src="/static/tara/${isNegative ? 'tara_stressed.png' : 'tara_victory.png'}"
+             class="h-12 object-contain rounded-full ring-1 ring-coral"
+             style="${isNegative ? 'object-position: 28% 0; filter: drop-shadow(0 2px 6px rgba(255,59,48,0.3));' : ''}">
+        <div>
+            <div class="font-semibold text-sm">${isNegative ? "<i class='fi fi-rr-triangle-warning'></i> Tara's concerned" : "<i class='fi fi-rr-leaf'></i> Tara's calm"}</div>
+            <p class="text-sm text-gray-600 italic">"${data.ai_summary || 'Version comparison complete.'}"</p>
+        </div>
+    </div>
+    <div class="flex gap-4 mb-4">
+        <div class="text-xs px-3 py-1 rounded-full font-mono" style="background: rgba(0,0,0,0.06);">${data.v1.version_label}</div>
+        <span class="text-gray-400">→</span>
+        <div class="text-xs px-3 py-1 rounded-full font-mono" style="background: rgba(255,107,107,0.1); color: var(--coral);">${data.v2.version_label}</div>
+    </div>`;
+
+    if (data.changes && data.changes.length > 0) {
+        data.changes.forEach(change => {
+            if (change.type === 'added') {
+                html += `<div class="diff-card diff-added">
+                    <span class="text-xs px-2 py-0.5 rounded-full font-bold new-badge mr-2">NEW</span>
+                    <span class="font-medium text-sm">${change.clause.clause_title}</span>
+                    <p class="text-xs text-gray-500 mt-1">${change.clause.extracted_value || change.clause.clause_text.substring(0, 100)}</p>
+                </div>`;
+            } else if (change.type === 'removed') {
+                html += `<div class="diff-card diff-removed">
+                    <span class="text-xs px-2 py-0.5 rounded-full font-bold removed-badge mr-2" style="background: rgba(255,59,48,0.1); color: var(--critical);">REMOVED</span>
+                    <span class="font-medium text-sm text-gray-400 line-through">${change.clause.clause_title}</span>
+                </div>`;
+            } else if (change.type === 'modified') {
+                const impact = change.impact;
+                const impactColor = impact === 'negative' ? 'var(--critical)' : impact === 'positive' ? 'var(--teal)' : 'var(--gold)';
+                html += `<div class="diff-card diff-modified">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xs px-2 py-0.5 rounded-full font-bold changed-badge">CHANGED</span>
+                        <span class="font-medium text-sm">${change.old.clause_title}</span>
+                        <span class="text-xs font-bold ml-auto" style="color: ${impactColor};">${impact === 'negative' ? '📉 WORSE' : impact === 'positive' ? '📈 BETTER' : '↔ NEUTRAL'}</span>
+                    </div>
+                    <div class="flex gap-4 text-xs">
+                        <div><span class="text-gray-400">Before:</span> <span class="mono font-medium line-through text-gray-400">${change.old.extracted_value || 'N/A'}</span></div>
+                        <div>→</div>
+                        <div><span class="text-gray-400">After:</span> <span class="mono font-bold" style="color: ${impactColor};">${change.new.extracted_value || 'N/A'}</span></div>
+                    </div>
+                </div>`;
+            }
+        });
+    } else {
+        html += `<div class="text-center py-6 text-gray-400"><p>No clause differences detected between these versions.</p></div>`;
+    }
+
+    container.innerHTML = html;
+    container.classList.remove('hidden');
+}
+
+// Auto-compare if carrier params are in URL
+window.addEventListener('load', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('carrier1') && params.get('carrier2')) {
+        compareCarriers();
+    }
+});
+</script>
+{% endblock %}

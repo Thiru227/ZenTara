@@ -1,0 +1,393 @@
+{
+  "timestamp": "2026-03-12T18:02:11",
+  "model": "claude-haiku-4-5",
+  "api_time_seconds": 9.0,
+  "input_tokens": 5771,
+  "output_tokens": 831,
+  "total": 30,
+  "passed": 26,
+  "partial": 3,
+  "failed": 1,
+  "avg_score": 0.9,
+  "results": [
+    {
+      "q": 1,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "4.1",
+      "matched": [
+        "21",
+        "calendar days",
+        "delivery date"
+      ],
+      "missed": [],
+      "answer": "21 calendar days from delivery date (Section 4.1)."
+    },
+    {
+      "q": 2,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "4.1",
+      "matched": [
+        "60",
+        "calendar days",
+        "shipment date"
+      ],
+      "missed": [],
+      "answer": "60 calendar days from shipment date (Section 4.1)."
+    },
+    {
+      "q": 3,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "4.1",
+      "matched": [
+        "15",
+        "calendar days"
+      ],
+      "missed": [],
+      "answer": "15 calendar days from the committed delivery date (Section 4.1)."
+    },
+    {
+      "q": 4,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "4.1",
+      "matched": [
+        "30",
+        "calendar days",
+        "invoice"
+      ],
+      "missed": [],
+      "answer": "30 calendar days from invoice date (Section 4.1)."
+    },
+    {
+      "q": 5,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "4.1",
+      "matched": [
+        "45",
+        "calendar days"
+      ],
+      "missed": [],
+      "answer": "45 calendar days from invoice date (Section 4.1)."
+    },
+    {
+      "q": 6,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "4.1",
+      "matched": [
+        "concealed",
+        "21",
+        "calendar days"
+      ],
+      "missed": [],
+      "answer": "Concealed Damage Claim, with a deadline of 21 calendar days from delivery date (Section 4.1)."
+    },
+    {
+      "q": 7,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "4.4",
+      "matched": [
+        "2",
+        "business days"
+      ],
+      "missed": [],
+      "answer": "Within 2 business days of submission (Section 4.4)."
+    },
+    {
+      "q": 8,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "4.4",
+      "matched": [
+        "5",
+        "7",
+        "business days"
+      ],
+      "missed": [],
+      "answer": "5-7 business days for standard claims (Section 4.4)."
+    },
+    {
+      "q": 9,
+      "status": "FAIL",
+      "score": 0.0,
+      "clause": "4.1",
+      "matched": [],
+      "missed": [
+        "rejected"
+      ],
+      "answer": "The claim is permanently forfeited; FedEx does not accept claims filed outside the specified deadline (Section 4, Critical Notice)."
+    },
+    {
+      "q": 10,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "4.1",
+      "matched": [
+        "120",
+        "calendar days"
+      ],
+      "missed": [],
+      "answer": "120 calendar days from shipment date under the Warsaw Convention (Section 4.1)."
+    },
+    {
+      "q": 11,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "5.1",
+      "matched": [
+        "100",
+        "usd"
+      ],
+      "missed": [],
+      "answer": "$100 USD per shipment, included at no charge (Section 5.1)."
+    },
+    {
+      "q": 12,
+      "status": "PARTIAL",
+      "score": 0.33,
+      "clause": "5.1",
+      "matched": [
+        "electronics"
+      ],
+      "missed": [
+        "1,000",
+        "1000"
+      ],
+      "answer": "$100 USD maximum; no excess coverage increases the liability limit for electronics without separate excess value declaration (Section 5.1)."
+    },
+    {
+      "q": 13,
+      "status": "PARTIAL",
+      "score": 0.5,
+      "clause": "5.2",
+      "matched": [
+        "50,000"
+      ],
+      "missed": [
+        "50000"
+      ],
+      "answer": "Up to $50,000 declared value can be purchased at $0.90 per $100 of declared value (Section 5.2)."
+    },
+    {
+      "q": 14,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "5.1",
+      "matched": [
+        "25",
+        "per pound",
+        "50,000"
+      ],
+      "missed": [],
+      "answer": "$25 USD per pound with a maximum of $50,000 per shipment (Section 5.1)."
+    },
+    {
+      "q": 15,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "5.3",
+      "matched": [
+        "no",
+        "waiv",
+        "consequential"
+      ],
+      "missed": [],
+      "answer": "No; FedEx expressly waives liability for lost profits, lost revenue, business interruption, and other consequential damages (Section 5.3)."
+    },
+    {
+      "q": 16,
+      "status": "PARTIAL",
+      "score": 0.5,
+      "clause": "5.1",
+      "matched": [
+        "1,000"
+      ],
+      "missed": [
+        "1000"
+      ],
+      "answer": "$1,000 USD maximum unless separately insured; antiques are subject to the $1,000 cap in Section 5.1 unless purchased excess coverage."
+    },
+    {
+      "q": 17,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "3.1",
+      "matched": [
+        "99",
+        "99.0"
+      ],
+      "missed": [],
+      "answer": "99.0% on-time delivery commitment (Section 3.1)."
+    },
+    {
+      "q": 18,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "3.3",
+      "matched": [
+        "100%",
+        "credit",
+        "shipping charge"
+      ],
+      "missed": [],
+      "answer": "100% credit of the shipping charge for that specific shipment (Section 3.3)."
+    },
+    {
+      "q": 19,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "7.1",
+      "matched": [
+        "20%",
+        "monthly"
+      ],
+      "missed": [],
+      "answer": "20% of Customer's total monthly shipping spend (Section 7.1)."
+    },
+    {
+      "q": 20,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "7.1",
+      "matched": [
+        "12",
+        "months"
+      ],
+      "missed": [],
+      "answer": "Unused credits expire after 12 months (Section 7.1)."
+    },
+    {
+      "q": 21,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "7.1",
+      "matched": [
+        "terminat",
+        "30"
+      ],
+      "missed": [],
+      "answer": "Customer may terminate with 30-day written notice without any early termination penalty (Section 9.3)."
+    },
+    {
+      "q": 22,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "3.1",
+      "matched": [
+        "95",
+        "95.0"
+      ],
+      "missed": [],
+      "answer": "95.0% on-time delivery commitment within 2-5 business days post-customs (Section 3.1)."
+    },
+    {
+      "q": 23,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "6.3",
+      "matched": [
+        "25",
+        "usd"
+      ],
+      "missed": [],
+      "answer": "$25 USD credit per missed scheduled pickup (Section 6.3)."
+    },
+    {
+      "q": 24,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "4.1",
+      "matched": [
+        "10",
+        "business days"
+      ],
+      "missed": [],
+      "answer": "10 business days from the missed pickup date (Section 6.3)."
+    },
+    {
+      "q": 25,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "6.2",
+      "matched": [
+        "4:00",
+        "6:00",
+        "monday",
+        "saturday"
+      ],
+      "missed": [],
+      "answer": "4:00 PM – 6:00 PM, Monday through Saturday at the Bengaluru warehouse (Section 6.2)."
+    },
+    {
+      "q": 26,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "9.1",
+      "matched": [
+        "60",
+        "days",
+        "written"
+      ],
+      "missed": [],
+      "answer": "60 days written notice without cause, via registered mail or email (Section 9.1)."
+    },
+    {
+      "q": 27,
+      "status": "PASS",
+      "score": 0.67,
+      "clause": "9.4",
+      "matched": [
+        "48,000",
+        "10%"
+      ],
+      "missed": [
+        "48000"
+      ],
+      "answer": "10% of annualized shipping spend; approximately $48,000 USD based on the $480,000 annualized estimate (Section 9.4)."
+    },
+    {
+      "q": 28,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "8.2",
+      "matched": [
+        "30",
+        "days",
+        "written"
+      ],
+      "missed": [],
+      "answer": "30 days advance written notice; annual maximum on rate adjustments (Section 8.2)."
+    },
+    {
+      "q": 29,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "8.2",
+      "matched": [
+        "15",
+        "days"
+      ],
+      "missed": [],
+      "answer": "15 days from notice date; written objection required, otherwise silence = acceptance (Section 8.2)."
+    },
+    {
+      "q": 30,
+      "status": "PASS",
+      "score": 1.0,
+      "clause": "11.2",
+      "matched": [
+        "18%",
+        "12%",
+        "15%",
+        "10%"
+      ],
+      "missed": [],
+      "answer": "FedEx Express Domestic 18% discount, FedEx Ground Commercial 12% discount, FedEx International Priority 15% discount, FedEx Freight LTL 10% discount, "
+    }
+  ]
+}

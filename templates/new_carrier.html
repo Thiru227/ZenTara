@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}New Carrier — ZenTara{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-10">
+    <div class="text-sm text-gray-400 mb-4">
+        <a href="/dashboard" style="color: var(--coral);">Dashboard</a> /
+        <a href="/carriers" style="color: var(--coral);">Carriers</a> /
+        New Carrier
+    </div>
+
+    <div class="bg-white rounded-2xl p-8 shadow-lg border border-black/5">
+        <!-- Header -->
+        <div class="flex items-center gap-4 mb-6">
+            <img src="{{ url_for('static', filename='tara/tara_standing.png') }}"
+                 alt="Tara" class="h-16 object-contain tara-float"
+                 style="filter: drop-shadow(0 4px 10px rgba(255,107,107,0.3));">
+            <div>
+                <h1 class="font-display text-2xl font-bold" style="color: var(--charcoal);">Add New Carrier</h1>
+                <p class="text-gray-500 text-sm mt-1">I'll help you track every clause and deadline 🧘</p>
+            </div>
+        </div>
+
+        <form action="/carriers/new" method="POST" class="flex flex-col gap-4">
+            <!-- Carrier Name -->
+            <div>
+                <label class="text-sm font-medium text-gray-600 block mb-1.5">
+                    Carrier Name <span class="text-red-400">*</span>
+                </label>
+                <input type="text" name="name" required
+                       class="w-full border border-gray-200 rounded-xl px-4 py-3 font-body text-sm outline-none focus:border-coral transition-colors"
+                       placeholder="e.g. FedEx, DHL, UPS, Amazon Logistics"
+                       style="--tw-ring-color: var(--coral);"
+                       onfocus="this.style.borderColor='var(--coral)'"
+                       onblur="this.style.borderColor=''">
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label class="text-sm font-medium text-gray-600 block mb-1.5">Description</label>
+                <textarea name="description" rows="2"
+                          class="w-full border border-gray-200 rounded-xl px-4 py-3 font-body text-sm outline-none transition-colors resize-none"
+                          placeholder="Optional description of this carrier relationship..."
+                          onfocus="this.style.borderColor='var(--coral)'"
+                          onblur="this.style.borderColor=''"></textarea>
+            </div>
+
+            <!-- Logo Color + Website -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm font-medium text-gray-600 block mb-1.5">Brand Color</label>
+                    <div class="flex items-center gap-3">
+                        <input type="color" name="logo_color" value="#FF6B6B"
+                               class="w-12 h-10 rounded-lg border border-gray-200 cursor-pointer p-1"
+                               id="color-picker"
+                               oninput="updateColorPreview(this.value)">
+                        <div id="color-badge" class="flex-1 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm"
+                             style="background: #FF6B6B;">FE</div>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-600 block mb-1.5">Website (optional)</label>
+                    <input type="url" name="website"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-3 font-body text-sm outline-none transition-colors"
+                           placeholder="https://..."
+                           onfocus="this.style.borderColor='var(--coral)'"
+                           onblur="this.style.borderColor=''">
+                </div>
+            </div>
+
+            <!-- Quick Presets -->
+            <div>
+                <div class="text-xs font-medium text-gray-400 mb-2">Quick presets:</div>
+                <div class="flex flex-wrap gap-2">
+                    {% set presets = [
+                        ('FedEx', '#4D148C'),
+                        ('DHL', '#FFCC00'),
+                        ('UPS', '#351C15'),
+                        ('USPS', '#004B87'),
+                        ('Amazon', '#FF9900')
+                    ] %}
+                    {% for name, color in presets %}
+                    <button type="button"
+                            class="px-3 py-1.5 rounded-full text-xs font-medium text-white transition-all hover:scale-105"
+                            style="background: {{ color }};"
+                            onclick="applyPreset('{{ name }}', '{{ color }}')">
+                        {{ name }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex gap-3 pt-2">
+                <a href="/carriers" class="btn-ghost flex-1 justify-center">Cancel</a>
+                <button type="submit" class="btn-coral flex-1 justify-center">
+                    Add Carrier →
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Helper tip -->
+    <div class="mt-4 flex items-start gap-3 px-4 py-3 rounded-xl text-sm"
+         style="background: rgba(255,179,71,0.08); border: 1px solid rgba(255,179,71,0.2);">
+        <span>💡</span>
+        <div class="text-gray-500">After adding a carrier, you can upload SLA documents and I'll automatically extract key clauses and deadlines.</div>
+    </div>
+</div>
+
+<script>
+function updateColorPreview(color) {
+    const badge = document.getElementById('color-badge');
+    badge.style.background = color;
+    const nameInput = document.querySelector('input[name="name"]');
+    const initials = nameInput.value.substring(0, 2).toUpperCase() || 'CA';
+    badge.textContent = initials;
+}
+
+function applyPreset(name, color) {
+    document.querySelector('input[name="name"]').value = name;
+    document.getElementById('color-picker').value = color;
+    updateColorPreview(color);
+    const badge = document.getElementById('color-badge');
+    badge.textContent = name.substring(0, 2).toUpperCase();
+}
+
+document.querySelector('input[name="name"]').addEventListener('input', function() {
+    const badge = document.getElementById('color-badge');
+    badge.textContent = this.value.substring(0, 2).toUpperCase() || 'CA';
+});
+</script>
+{% endblock %}

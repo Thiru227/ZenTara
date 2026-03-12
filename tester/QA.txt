@@ -1,0 +1,646 @@
+================================================================================
+FEDEX CORPORATION
+SERVICE LEVEL AGREEMENT (SLA)
+Version: 1.0
+Effective Date: January 1, 2025
+Expiry Date: December 31, 2025
+Document Reference: FDX-SLA-2025-US-001
+Classification: CONFIDENTIAL
+================================================================================
+
+SERVICE PROVIDER:
+  Company:   FedEx Corporation
+  Address:   942 South Shady Grove Road, Memphis, Tennessee 38120, USA
+  Phone:     1-800-463-3339
+  Email:     enterprise.accounts@fedex.com
+  Website:   www.fedex.com
+
+CUSTOMER:
+  Company:   Horizon Logistics Pvt. Ltd.
+  Address:   14 Industrial Park Road, Whitefield, Bengaluru, Karnataka 560066, India
+  Phone:     +91-80-4567-8900
+  Email:     operations@horizonlogistics.in
+  Account:   FDX-ACCT-20250047
+  Contact:   Arjun Mehta, Director of Supply Chain
+
+--------------------------------------------------------------------------------
+SECTION 1 — AGREEMENT OVERVIEW & DEFINITIONS
+--------------------------------------------------------------------------------
+
+1.1  PURPOSE
+
+This Service Level Agreement ("Agreement") is entered into between FedEx
+Corporation ("FedEx") and Horizon Logistics Pvt. Ltd. ("Customer") as of
+January 1, 2025. This Agreement governs all shipping services rendered by
+FedEx on behalf of Customer and defines performance standards, obligations,
+remedies, and liabilities applicable during the effective period.
+
+1.2  KEY DEFINITIONS
+
+SLA:
+  This Service Level Agreement — the binding document governing all FedEx
+  services for Horizon Logistics Pvt. Ltd.
+
+Business Day:
+  Monday through Friday, excluding U.S. federal holidays and FedEx-observed
+  closures. For India-origin shipments, Indian public holidays are additionally
+  excluded for local pickup operations.
+
+Shipment:
+  Any single package or freight consignment tendered to FedEx for transport
+  under this Agreement, identified by a unique FedEx tracking number.
+
+Delivery Commitment:
+  The guaranteed delivery date and time window communicated to Customer at
+  the time of shipment tender, as confirmed on the FedEx shipping receipt.
+
+Claim:
+  A formal written notification by Customer alleging loss, damage, delay, or
+  billing discrepancy related to a specific shipment.
+
+Credit:
+  A reduction in invoice charges issued by FedEx as remedy for a verified
+  service failure, applied to Customer's FedEx account.
+
+Force Majeure:
+  Events beyond reasonable control, including acts of God, war, terrorism,
+  pandemics, government action, severe weather, or infrastructure failure.
+
+Active Version:
+  The most recently executed version of this SLA, which fully supersedes
+  all prior versions. Currently: Version 1.0.
+
+Excess Value Coverage:
+  Optional declared value protection purchased at time of shipment for
+  coverage beyond standard liability limits.
+
+--------------------------------------------------------------------------------
+SECTION 2 — SERVICES COVERED
+--------------------------------------------------------------------------------
+
+2.1  COVERED SERVICE LINES
+
+This Agreement covers the following FedEx service categories:
+
+  SERVICE                        DESCRIPTION
+  FedEx Priority Overnight       Next business day delivery by 10:30 AM
+  FedEx Standard Overnight       Next business day delivery by end of day
+  FedEx 2Day AM                  Second business day delivery by 10:30 AM
+  FedEx 2Day                     Second business day delivery by end of day
+  FedEx Express Saver            Third business day delivery
+  FedEx Ground                   1-7 business day ground delivery by zone
+  FedEx Home Delivery            Residential ground delivery (Mon-Sat)
+  FedEx Freight LTL              Less-than-truckload freight services
+  FedEx International Priority   Cross-border priority delivery, 1-3 days
+  FedEx International Economy    Cross-border economy delivery, 2-5 days
+  FedEx SameDay                  Same-day delivery in select U.S. markets
+
+2.2  EXCLUDED SERVICES
+
+The following services are NOT covered under this Agreement:
+  - FedEx Custom Critical
+  - FedEx Supply Chain managed services
+  - Third-party broker-arranged shipments
+  - Any service not explicitly listed in Section 2.1
+
+--------------------------------------------------------------------------------
+SECTION 3 — ON-TIME DELIVERY COMMITMENTS
+--------------------------------------------------------------------------------
+
+3.1  PERFORMANCE STANDARDS
+
+FedEx commits to the following on-time delivery performance, measured monthly
+across all eligible shipments under Customer account FDX-ACCT-20250047:
+
+  SERVICE                        COMMITMENT    MEASUREMENT WINDOW
+  FedEx Priority Overnight       99.0%         By 10:30 AM, next business day
+  FedEx Standard Overnight       98.5%         By end of next business day
+  FedEx 2Day AM                  97.5%         By 10:30 AM, second business day
+  FedEx 2Day                     97.5%         By end of second business day
+  FedEx Express Saver            96.0%         By end of third business day
+  FedEx Ground                   95.0%         Within quoted transit time (1-7 days)
+  FedEx Home Delivery            94.5%         Within quoted transit time
+  FedEx Freight LTL              94.0%         Within quoted freight schedule
+  FedEx International Priority   97.0%         Within 1-3 business days post-customs
+  FedEx International Economy    95.0%         Within 2-5 business days post-customs
+
+3.2  MEASUREMENT METHODOLOGY
+
+Performance is calculated on a rolling 30-day calendar month basis.
+Measurement includes all shipments tendered under the Customer account.
+Exclusions from measurement:
+  - Force majeure events (documented)
+  - Incorrect or incomplete delivery address provided by Customer
+  - Recipient unavailability after 2 delivery attempts
+  - Customs delays caused by incomplete documentation from Customer
+  - Shipments held per Customer instruction
+
+3.3  REMEDY FOR DELIVERY FAILURES
+
+If FedEx fails to meet the on-time delivery commitment on any eligible
+shipment, Customer is entitled to a full credit of the shipping charge for
+that specific shipment, subject to the claim filing requirements in Section 4.
+Credits are applied to account FDX-ACCT-20250047 within 2 billing cycles.
+
+--------------------------------------------------------------------------------
+SECTION 4 — CLAIM FILING REQUIREMENTS
+--------------------------------------------------------------------------------
+
+CRITICAL NOTICE:
+Failure to file claims within the specified windows permanently forfeits
+Customer's right to any remedy. All deadlines are strictly enforced and are
+not subject to extension except in cases of documented Force Majeure.
+
+4.1  CLAIM DEADLINES BY TYPE
+
+  CLAIM TYPE                DEADLINE                   START DATE
+  Loss Claim                60 calendar days           From shipment date
+  Visible Damage Claim      21 calendar days           From delivery date
+  Concealed Damage Claim    21 calendar days           From delivery date
+  Delay / Service Failure   15 calendar days           From committed delivery date
+  Billing Dispute           30 calendar days           From invoice date
+  Overcharge Claim          45 calendar days           From invoice date
+  International Loss        120 calendar days          From shipment date (Warsaw)
+  International Damage      7 calendar days            From delivery date (Warsaw)
+  International Delay       21 calendar days           From delivery date (Warsaw)
+  Pickup Failure Credit     10 business days           From missed pickup date
+
+4.2  REQUIRED DOCUMENTATION
+
+All claims must include the following or will be rejected without review:
+  - Original FedEx tracking number and shipment receipt
+  - Commercial invoice or proof of value for the shipment
+  - Minimum 4-angle photographs of damaged goods and packaging
+  - Proof of delivery or non-delivery confirmation
+  - Completed FedEx Claim Form (Form 1357 or electronic equivalent)
+  - Bank account details for credit or refund processing
+
+4.3  FILING METHODS
+
+Accepted claim submission channels:
+  - FedEx Billing Online: billingonline.fedex.com
+  - FedEx Claims Portal: www.fedex.com/en-us/customer-support/claims.html
+  - Written notice to: FedEx Revenue Services, 3875 Airways Blvd, Memphis TN 38116
+  - Dedicated account email: claims.enterprise@fedex.com
+
+4.4  CLAIM PROCESSING TIMELINE
+
+  - Acknowledgement:    Within 2 business days of submission
+  - Claim Reference:    Assigned at acknowledgement
+  - Standard Claims:    Resolved within 5-7 business days
+  - Complex Claims:     Resolved within 30 calendar days
+  - Freight Claims:     Resolved within 30 calendar days
+
+--------------------------------------------------------------------------------
+SECTION 5 — LIABILITY LIMITS
+--------------------------------------------------------------------------------
+
+5.1  STANDARD LIABILITY SCHEDULE
+
+  SERVICE/ITEM                   LIABILITY LIMIT
+  FedEx Express (Domestic)       $100 USD per shipment (included, no charge)
+  FedEx Ground                   $100 USD per package (included, no charge)
+  FedEx Freight LTL              $25 USD per pound, max $50,000 per shipment
+  FedEx International            Per Warsaw/Montreal Convention limits
+  Electronics                    $1,000 USD maximum regardless of declared value
+  Artwork / Antiques             $1,000 USD maximum unless separately insured
+  Jewelry / Watches              Not covered — excluded category
+  Cash / Currency                Not covered — excluded category
+  Living Organisms               Not covered — excluded category
+  Hazardous Materials            Not covered — excluded category
+  Perishables                    $100 USD standard coverage only
+
+5.2  EXCESS VALUE COVERAGE
+
+Available for purchase at time of shipment only:
+  - Coverage available up to $50,000 declared value
+  - Rate: $0.90 per $100 of declared value (minimum $2.70)
+  - Must be declared before shipment tender — retroactive purchase not permitted
+  - Not available for excluded item categories listed in Section 5.1
+
+5.3  CONSEQUENTIAL DAMAGES WAIVER
+
+FedEx shall not be liable under any circumstances for indirect, incidental,
+consequential, or punitive damages, including but not limited to:
+  - Lost profits or lost revenue
+  - Business interruption losses
+  - Loss of contracts or business opportunities
+  - Reputational damage
+This waiver applies even if FedEx has been advised of the possibility of such
+damages prior to the shipment.
+
+--------------------------------------------------------------------------------
+SECTION 6 — PICKUP COMMITMENTS & SERVICE WINDOWS
+--------------------------------------------------------------------------------
+
+6.1  PICKUP SERVICE STANDARDS
+
+  PICKUP TYPE            COMMITMENT                         CONDITION
+  Scheduled Pickup       Within agreed 2-hour window        Pre-booked via account
+  On-Call Pickup         Within 4 hours of confirmed req.   During business hours
+  Same-Day Express       Pickup same day as request         Request by 5:00 PM local
+  After-Hours Pickup     Available in select markets        Additional surcharge; not SLA-guaranteed
+
+6.2  CUSTOMER PICKUP LOCATION
+
+Primary pickup address registered under this Agreement:
+  Horizon Logistics Pvt. Ltd.
+  Warehouse Unit 7B, 14 Industrial Park Road
+  Whitefield, Bengaluru, Karnataka 560066
+  Pickup Contact: Suresh Nair, +91-98450-32100
+  Scheduled Pickup Window: 4:00 PM – 6:00 PM, Monday through Saturday
+
+6.3  PICKUP FAILURE REMEDY
+
+  - Credit per missed scheduled pickup:  $25 USD (credited to FDX-ACCT-20250047)
+  - Monthly cap on pickup failure credits: $500 USD
+  - Filing deadline: 10 business days from missed pickup date
+  - Filing method: Same as claim filing methods in Section 4.3
+
+--------------------------------------------------------------------------------
+SECTION 7 — PENALTY CLAUSES & SERVICE CREDITS
+--------------------------------------------------------------------------------
+
+7.1  CREDIT SCHEDULE
+
+  FAILURE TYPE                   CREDIT / REMEDY
+  On-Time Delivery Failure        100% credit of shipping charge for affected shipment
+  Consecutive Month Failure       Escalation right to SLA Review Board after 2 months
+  Pickup SLA Breach               $25 per missed pickup, max $500/month
+  Billing Error / Overcharge      100% refund of overcharge + 5% administrative credit
+  Systemic Express Failure        Customer termination right after 3 consecutive months
+  Monthly Credit Cap              20% of Customer's total monthly shipping spend
+  Credit Expiry                   Unused credits expire after 12 months
+
+7.2  CREDIT APPLICATION
+
+Credits are applied exclusively to account FDX-ACCT-20250047. Credits cannot
+be converted to cash, transferred to other accounts, or used retroactively
+against closed invoices. FedEx will apply credits within 2 billing cycles of
+claim approval.
+
+7.3  ESCALATION PATH
+
+Step 1 — Customer files claim per Section 4.
+Step 2 — If unresolved, Customer may escalate to assigned Account Manager:
+          Name:  Sarah Connolly
+          Email: s.connolly@fedex.com
+          Phone: +1-901-818-7722
+Step 3 — Unresolved escalations go to SLA Review Board within 30 days.
+Step 4 — Binding arbitration per Section 10 if still unresolved.
+
+--------------------------------------------------------------------------------
+SECTION 8 — ANNUAL SLA REVIEW & VERSION CONTROL
+--------------------------------------------------------------------------------
+
+8.1  REVIEW CYCLE
+
+  Annual Review Window:   October 1 – November 30 each year
+  Review Participants:    FedEx Enterprise Account Team + Customer Operations Lead
+  Next Scheduled Review:  October 1, 2025
+
+8.2  AMENDMENT PROCESS
+
+  - Standard amendments:      30 days written notice to Customer before effect
+  - Customer objection window: 15 days from notice date (written objection required)
+  - Auto-acceptance:           Silence after 15 days = acceptance of new terms
+  - Emergency amendments:      7 days notice for security or regulatory changes
+  - Rate adjustments:          30 days advance written notice, annual maximum
+
+8.3  VERSION HISTORY
+
+  VERSION   DATE              CHANGES
+  1.0       January 1, 2025   Initial agreement execution between FedEx and
+                              Horizon Logistics Pvt. Ltd. All clauses original.
+
+  (Future versions will be appended here upon execution)
+
+8.4  VERSION SUPERSESSION
+
+Each newly executed version fully supersedes all prior versions. In case of
+conflict between versions, the higher version number prevails.
+
+--------------------------------------------------------------------------------
+SECTION 9 — TERMINATION
+--------------------------------------------------------------------------------
+
+9.1  STANDARD TERMINATION
+
+Either party may terminate this Agreement with 60 days written notice
+without cause. Notice must be delivered via registered mail or email to the
+account contact addresses listed on the cover page.
+
+9.2  TERMINATION FOR CAUSE
+
+Immediate termination is permitted if either party:
+  - Materially breaches the Agreement AND
+  - Fails to cure the breach within 15 business days of written notice
+
+Material breach examples: repeated non-payment, fraudulent claims, or
+persistent SLA violations without good-faith remediation effort.
+
+9.3  SYSTEMIC FAILURE TERMINATION
+
+Per Section 7.1: Customer may terminate with 30-day written notice, without
+any early termination penalty, if FedEx fails to meet the Express on-time
+delivery commitment for 3 or more consecutive calendar months.
+
+9.4  EARLY TERMINATION FEE
+
+If Customer terminates this Agreement within the first 12 months without
+cause or systemic failure grounds:
+  Penalty: 10% of annualized shipping spend (based on trailing 3-month average
+  multiplied by 4), payable within 30 days of termination date.
+  Annualized spend estimate at signing: $480,000 USD
+  Early termination fee estimate:        $48,000 USD
+
+9.5  POST-TERMINATION OBLIGATIONS
+
+  - Outstanding claims filed before termination remain valid and are processed
+    under this Agreement's terms.
+  - FedEx retains all shipment records for 7 years post-termination per federal
+    record-keeping requirements.
+  - Customer retains access to FedEx Billing Online for 90 days post-termination
+    to retrieve historical invoices.
+
+--------------------------------------------------------------------------------
+SECTION 10 — GOVERNING LAW & DISPUTE RESOLUTION
+--------------------------------------------------------------------------------
+
+10.1  GOVERNING LAW
+
+This Agreement is governed by the laws of the State of Tennessee, USA,
+without regard to conflict of law principles.
+
+10.2  JURISDICTION
+
+Exclusive jurisdiction in federal and state courts of Shelby County, Tennessee.
+Customer expressly consents to jurisdiction and waives any objection to venue.
+
+10.3  DISPUTE RESOLUTION PROCESS
+
+  Step 1 — Direct Negotiation:   30-day good-faith negotiation between parties.
+  Step 2 — Mediation:            30-day mediation with neutral mediator (AAA rules).
+  Step 3 — Binding Arbitration:  Under AAA Commercial Arbitration Rules.
+
+Arbitration Venue:      Memphis, Tennessee (unless mutually agreed otherwise)
+Arbitration Language:   English
+Class Action Waiver:    Customer waives right to participate in class action suits.
+
+10.4  LIMITATION ON LEGAL ACTION
+
+No legal action may be initiated by either party more than 2 years after the
+event giving rise to the claim, regardless of when the party became aware of it.
+
+--------------------------------------------------------------------------------
+SECTION 11 — SPECIAL TERMS FOR HORIZON LOGISTICS PVT. LTD.
+--------------------------------------------------------------------------------
+
+11.1  VOLUME COMMITMENT
+
+Customer commits to a minimum monthly shipping spend of $30,000 USD on
+FedEx services under account FDX-ACCT-20250047 during the SLA period.
+Failure to meet volume commitment for 2 consecutive months entitles FedEx
+to renegotiate pricing terms with 30-day notice.
+
+11.2  NEGOTIATED DISCOUNTS
+
+  FedEx Express Domestic:        18% discount off standard published rates
+  FedEx Ground Commercial:       12% discount off standard published rates
+  FedEx International Priority:  15% discount off standard published rates
+  FedEx Freight LTL:             10% discount off standard published rates
+  Surcharge Waiver:              Residential surcharge waived for first 500
+                                 residential deliveries per month.
+
+11.3  DEDICATED ACCOUNT SUPPORT
+
+  Account Manager:   Sarah Connolly
+  Email:             s.connolly@fedex.com
+  Phone:             +1-901-818-7722
+  Support Hours:     Monday–Friday, 8:00 AM – 6:00 PM CST
+  Emergency Line:    +1-901-818-0000 (24/7 for shipments above $10,000 value)
+
+11.4  QUARTERLY BUSINESS REVIEWS
+
+FedEx commits to conducting Quarterly Business Reviews (QBRs) with Customer:
+  Q1 Review:  April 15, 2025
+  Q2 Review:  July 15, 2025
+  Q3 Review:  October 15, 2025
+  Q4 Review:  January 15, 2026 (renewal planning)
+  Format: Video conference or in-person at Customer's Bengaluru office.
+
+--------------------------------------------------------------------------------
+SIGNATURES & EXECUTION
+--------------------------------------------------------------------------------
+
+This Agreement has been executed by authorized representatives of both parties
+as of the Effective Date stated above.
+
+FOR FEDEX CORPORATION:
+
+  Signature:  _______________________
+  Name:       Rajesh Subramaniam
+  Title:      President & Chief Executive Officer
+  Date:       January 1, 2025
+  Email:      ceo.office@fedex.com
+
+FOR HORIZON LOGISTICS PVT. LTD.:
+
+  Signature:  _______________________
+  Name:       Arjun Mehta
+  Title:      Director of Supply Chain
+  Date:       January 1, 2025
+  Email:      arjun.mehta@horizonlogistics.in
+
+--------------------------------------------------------------------------------
+APPENDIX A — EXCLUDED ITEMS (COMPLETE LIST)
+--------------------------------------------------------------------------------
+
+The following items are excluded from FedEx liability coverage entirely:
+
+  1.  Cash, currency, coins, and negotiable instruments
+  2.  Jewelry, precious stones, and precious metals (unmounted)
+  3.  Antiques (items over 100 years old)
+  4.  Living plants and organisms
+  5.  Live animals
+  6.  Human remains
+  7.  Hazardous materials not pre-approved by FedEx
+  8.  Radioactive materials
+  9.  Firearms (without prior special authorization)
+  10. Lottery tickets and gambling materials
+  11. Perishable goods without prior temperature-control agreement
+  12. Items of sentimental value (non-monetary value not compensable)
+
+--------------------------------------------------------------------------------
+APPENDIX B — FEDEX CONTACT DIRECTORY
+--------------------------------------------------------------------------------
+
+  DEPARTMENT                     CONTACT                     PHONE
+  Enterprise Account Team        Sarah Connolly              +1-901-818-7722
+  Claims Department              claims.enterprise@fedex.com +1-800-463-3339 x4
+  Billing & Invoicing            billing@fedex.com           +1-800-622-1147
+  Technical / API Support        developer.support@fedex.com +1-877-339-2774
+  International Operations       intl.ops@fedex.com          +1-901-818-5000
+  24/7 Emergency Line            N/A                         +1-901-818-0000
+
+================================================================================
+ZENTARA Q&A TEST BATTERY — FEDEX SLA v1.0
+30 Questions to Validate RAG System Accuracy
+================================================================================
+
+--------------------------------------------------------------------------------
+PART A — CLAIM FILING DEADLINES (Questions 1–10)
+--------------------------------------------------------------------------------
+
+Q1: What is the deadline to file a visible damage claim?
+A1: 21 calendar days from the delivery date.
+    Clause: Section 4.1
+
+Q2: What is the deadline to file a loss claim?
+A2: 60 calendar days from the shipment date.
+    Clause: Section 4.1
+
+Q3: A FedEx Priority Overnight shipment arrived 1 day late. How long does the
+    customer have to request a service failure credit?
+A3: 15 calendar days from the committed delivery date.
+    Clause: Section 4.1
+
+Q4: What is the billing dispute deadline?
+A4: 30 calendar days from the invoice date. Late disputes are automatically rejected.
+    Clause: Section 4.1
+
+Q5: What is the overcharge claim deadline?
+A5: 45 calendar days from the invoice date, with supporting documentation.
+    Clause: Section 4.1
+
+Q6: A package arrived with no visible damage but contents were broken inside.
+    What type of claim is this, and what is the deadline?
+A6: This is a Concealed Damage Claim. The deadline is 21 calendar days from
+    the delivery date. Original packaging must be preserved for inspection.
+    Clause: Section 4.1
+
+Q7: How quickly will FedEx acknowledge a submitted claim?
+A7: Within 2 business days of submission, with a claim reference number assigned.
+    Clause: Section 4.4
+
+Q8: What is the resolution timeline for a standard damage claim?
+A8: 5–7 business days for standard claims; up to 30 calendar days for complex claims.
+    Clause: Section 4.4
+
+Q9: What happens if a billing dispute is submitted on day 32 after the invoice?
+A9: It is automatically rejected. No extension is granted under any circumstances
+    except documented Force Majeure.
+    Clause: Section 4.1
+
+Q10: What is the deadline to file an international loss claim under the Warsaw Convention?
+A10: 120 calendar days from the shipment date.
+     Clause: Section 4.1
+
+--------------------------------------------------------------------------------
+PART B — LIABILITY & COVERAGE (Questions 11–16)
+--------------------------------------------------------------------------------
+
+Q11: What is the standard declared value included for a FedEx Express domestic shipment?
+A11: $100 USD per shipment, included at no extra charge.
+     Clause: Section 5.1
+
+Q12: A customer ships a laptop worth $3,000 via FedEx Ground with no excess coverage.
+     What is FedEx's maximum liability?
+A12: $1,000 USD. Electronics have a specific liability cap regardless of declared value
+     or standard coverage.
+     Clause: Section 5.1
+
+Q13: What is the maximum declared value a customer can purchase via excess coverage?
+A13: $50,000 USD, at a rate of $0.90 per $100 of declared value (minimum $2.70).
+     Clause: Section 5.2
+
+Q14: What is FedEx's maximum liability for a FedEx Freight LTL shipment?
+A14: $25 USD per pound, with a maximum of $50,000 per shipment, whichever is less.
+     Clause: Section 5.1
+
+Q15: Can Horizon Logistics sue FedEx for lost sales revenue caused by a late shipment?
+A15: No. Section 5.3 waives all consequential, indirect, and punitive damages
+     including lost profits, lost revenue, and business interruption losses.
+     Clause: Section 5.3
+
+Q16: A customer ships an antique table worth $8,000. What is FedEx's liability?
+A16: $1,000 USD maximum, as antiques are listed as a liability-capped category.
+     Additionally, items over 100 years old are on the Appendix A excluded list,
+     meaning FedEx may bear zero liability.
+     Clause: Section 5.1, Appendix A
+
+--------------------------------------------------------------------------------
+PART C — ON-TIME PERFORMANCE & CREDITS (Questions 17–22)
+--------------------------------------------------------------------------------
+
+Q17: What on-time percentage does FedEx commit to for Priority Overnight?
+A17: 99.0% on-time delivery by 10:30 AM to major metro areas on the next business day.
+     Clause: Section 3.1
+
+Q18: What credit is Horizon Logistics entitled to when FedEx misses a Ground commitment?
+A18: 100% credit of the Ground shipping charge for that specific shipment.
+     Clause: Section 3.3
+
+Q19: What is the monthly cap on total service credits?
+A19: 20% of the Customer's total monthly shipping spend under account FDX-ACCT-20250047.
+     Clause: Section 7.1
+
+Q20: When do unused service credits expire?
+A20: Unused service credits expire after 12 months from issuance if not applied.
+     Clause: Section 7.1
+
+Q21: FedEx's Express on-time performance has been below the committed threshold for
+     3 consecutive months. What is Horizon Logistics entitled to do?
+A21: Terminate the Agreement with 30 days written notice, with no early termination penalty.
+     Clause: Section 7.1
+
+Q22: What is the International Economy on-time delivery commitment?
+A22: 95.0% on-time delivery within 2-5 business days post-customs clearance.
+     Clause: Section 3.1
+
+--------------------------------------------------------------------------------
+PART D — PICKUP, TERMINATION & ACCOUNT TERMS (Questions 23–30)
+--------------------------------------------------------------------------------
+
+Q23: What is the credit for a missed scheduled pickup?
+A23: $25 USD per missed scheduled pickup, with a maximum of $500 per calendar month.
+     Clause: Section 6.3
+
+Q24: What is the deadline to request a pickup failure credit?
+A24: 10 business days from the date of the missed pickup.
+     Clause: Section 4.1
+
+Q25: What is the scheduled pickup window for Horizon Logistics?
+A25: 4:00 PM – 6:00 PM, Monday through Saturday, at Warehouse Unit 7B,
+     14 Industrial Park Road, Whitefield, Bengaluru.
+     Clause: Section 6.2
+
+Q26: How much notice is required to terminate the Agreement without cause?
+A26: 60 days written notice from either party.
+     Clause: Section 9.1
+
+Q27: What is the early termination fee if Horizon Logistics cancels in month 8?
+A27: 10% of annualized shipping spend. Based on the estimate at signing of $480,000 USD
+     annually, the early termination fee would be approximately $48,000 USD.
+     Clause: Section 9.4
+
+Q28: How far in advance must FedEx notify Horizon Logistics of rate changes?
+A28: 30 days advance written notice for standard rate adjustments.
+     Clause: Section 8.2
+
+Q29: What is the customer objection window when FedEx proposes SLA term changes?
+A29: 15 days from the notice date to file a written objection. After 15 days,
+     silence is treated as acceptance of the new terms.
+     Clause: Section 8.2
+
+Q30: What are the negotiated discount rates for Horizon Logistics?
+A30: FedEx Express Domestic: 18%, FedEx Ground: 12%, International Priority: 15%,
+     Freight LTL: 10%. Additionally, the residential surcharge is waived for
+     the first 500 residential deliveries per month.
+     Clause: Section 11.2
+
+================================================================================
+END OF DOCUMENT
+FedEx SLA v1.0 | Account: FDX-ACCT-20250047 | Customer: Horizon Logistics Pvt. Ltd.
+Document ID: FDX-SLA-2025-US-001 | Classification: CONFIDENTIAL
+================================================================================

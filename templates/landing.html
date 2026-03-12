@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+{% block title %}ZenTara — Your Carrier Contracts, Finally at Peace{% endblock %}
+
+{% block extra_head %}
+<style>
+    body { background: var(--charcoal); overflow-x: hidden; }
+
+    .hero-bg {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background: radial-gradient(ellipse at 20% 50%, rgba(255,107,107,0.25) 0%, transparent 60%),
+                    radial-gradient(ellipse at 80% 20%, rgba(255,179,71,0.2) 0%, transparent 60%),
+                    radial-gradient(ellipse at 50% 80%, rgba(78,205,196,0.15) 0%, transparent 60%),
+                    var(--charcoal);
+    }
+
+    .mesh-grid {
+        position: fixed;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(255,107,107,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,107,107,0.05) 1px, transparent 1px);
+        background-size: 60px 60px;
+        z-index: 1;
+    }
+
+    .particle {
+        position: fixed;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .mandala {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        border: 1px solid rgba(255,179,71,0.15);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .mandala::before {
+        content: '';
+        position: absolute;
+        inset: 20px;
+        border-radius: 50%;
+        border: 1px solid rgba(255,107,107,0.2);
+    }
+    .mandala::after {
+        content: '';
+        position: absolute;
+        inset: 40px;
+        border-radius: 50%;
+        border: 1px solid rgba(78,205,196,0.15);
+    }
+
+    section { position: relative; z-index: 10; }
+
+    .feature-card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 20px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+    .feature-card:hover {
+        background: rgba(255,255,255,0.08);
+        border-color: rgba(255,107,107,0.4);
+        transform: translateY(-4px);
+    }
+
+    .stat-number {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--coral), var(--gold));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .tara-glow-ring {
+        position: absolute;
+        inset: -20px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,107,107,0.2) 0%, transparent 70%);
+        animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(40px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up { opacity: 0; }
+    .fade-in-up.visible { animation: fade-in-up 0.8s ease forwards; }
+
+    .cta-magnetic {
+        position: relative;
+        overflow: hidden;
+    }
+    .cta-magnetic::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .cta-magnetic:hover::before { opacity: 1; }
+
+    .scroll-arrow {
+        animation: float 2s ease-in-out infinite;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Background Layers -->
+<div class="hero-bg"></div>
+<div class="mesh-grid"></div>
+
+<!-- Particles (JS-generated) -->
+<canvas id="particle-canvas" class="fixed inset-0 z-2 pointer-events-none"></canvas>
+
+<!-- HERO SECTION -->
+<section class="min-h-screen flex flex-col items-center justify-center relative px-6 py-20">
+
+    <!-- Mandala Ring behind Tara -->
+    <div class="mandala mandala-spin absolute" style="z-index: 3; opacity: 0.6;"></div>
+
+    <!-- Golden outer ring -->
+    <div class="absolute w-96 h-96 rounded-full mandala-spin" style="
+        border: 2px solid rgba(255,179,71,0.2);
+        animation-direction: reverse;
+        animation-duration: 30s;
+        z-index: 3;
+    "></div>
+
+    <!-- Tara Image (Meditation pose) -->
+    <div class="relative tara-float" style="z-index: 4; margin-bottom: -1rem;">
+        <div class="tara-glow-ring"></div>
+        <img src="{{ url_for('static', filename='tara/tara_meditation.png') }}"
+             alt="Tara — ZenTara's AI yoga instructor"
+             class="h-72 md:h-96 object-contain drop-shadow-2xl relative z-10"
+             id="tara-hero">
+    </div>
+
+    <!-- Hero Text -->
+    <div class="text-center max-w-4xl mx-auto" style="z-index: 4;">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-6 fade-in-up"
+             style="background: rgba(255,107,107,0.15); color: var(--coral); border: 1px solid rgba(255,107,107,0.3);">
+            <span class="pulse-dot w-2 h-2 rounded-full inline-block" style="background: var(--coral);"></span>
+            AI-Powered Contract Intelligence
+        </div>
+
+        <h1 class="font-display text-5xl md:text-7xl font-bold text-white mb-6 fade-in-up leading-tight"
+            style="animation-delay: 0.1s;">
+            Your Carrier Contracts.<br>
+            <span style="background: linear-gradient(135deg, var(--coral), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                Finally at Peace.
+            </span>
+        </h1>
+
+        <p class="text-xl md:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto fade-in-up font-light leading-relaxed"
+           style="animation-delay: 0.2s;">
+            Tara watches every clause, tracks every deadline, and tells you before it's too late.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in-up" style="animation-delay: 0.3s;">
+            <a href="/signup"
+               class="btn-coral text-lg py-4 px-8 cta-magnetic glow-coral"
+               style="background: linear-gradient(135deg, var(--coral), #ff8e53); font-size: 1.05rem;">
+                🧘 Get Started Free
+            </a>
+            <a href="/login"
+               class="btn-ghost text-lg py-4 px-8"
+               style="color: white; border-color: rgba(255,255,255,0.3);">
+                🔑 Log In
+            </a>
+        </div>
+
+        <!-- Social proof stats -->
+        <div class="grid grid-cols-3 gap-6 mt-16 fade-in-up" style="animation-delay: 0.4s;">
+            <div class="text-center">
+                <div class="stat-number">∞</div>
+                <div class="text-gray-400 text-sm mt-1">Contracts Analyzed</div>
+            </div>
+            <div class="text-center">
+                <div class="stat-number">0</div>
+                <div class="text-gray-400 text-sm mt-1">Missed Deadlines</div>
+            </div>
+            <div class="text-center">
+                <div class="stat-number">☮</div>
+                <div class="text-gray-400 text-sm mt-1">Peace of Mind</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll Down Arrow -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-gray-500 scroll-arrow" style="z-index:4;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+        </svg>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-4 fade-in-up">
+                Meet <span style="color: var(--coral);">Tara</span>
+            </h2>
+            <p class="text-gray-400 text-xl fade-in-up">Your 24/7 contract intelligence assistant</p>
+        </div>
+
+        <!-- Tara Individual Poses -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 fade-in-up">
+            {% set pose_data = [
+                ('tara_standing.png',  'Standing',  '#FF6B6B', 'tara-breathe', 'Watching your contracts. A few things to review.'),
+                ('tara_stressed.png',  'Stressed',  '#FF3B30', 'tara-stressed', 'Critical deadlines! Act now.'),
+                ('tara_warrior.png',   'Warrior',   '#FFB347', 'tara-breathe', 'Comparing your options powerfully.'),
+                ('tara_victory.png',   'Victory',   '#4ECDC4', 'tara-float',   'All clear! Celebrate your contract mastery.')
+            ] %}
+            {% for img, name, color, anim, desc in pose_data %}
+            <div class="feature-card text-center flex flex-col items-center gap-3 py-6">
+                <img src="{{ url_for('static', filename='tara/' + img) }}"
+                     alt="Tara {{ name }}"
+                     class="h-40 object-contain {{ anim }}"
+                     style="filter: drop-shadow(0 8px 24px rgba(255,107,107,0.25));">
+                <div class="font-display text-lg font-bold" style="color: {{ color }};">{{ name }}</div>
+                <p class="text-gray-400 text-sm leading-snug">{{ desc }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="font-display text-4xl font-bold text-white mb-4 fade-in-up">
+                Everything your contracts need
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% set features = [
+                ('📤', 'Smart Upload', 'Upload any PDF contract. Gemini AI extracts clauses, deadlines, and obligations automatically.', '#FF6B6B'),
+                ('🔔', 'Proactive Alerts', '3-tier notification system flags critical deadlines before they expire. Never miss a claim window.', '#FFB347'),
+                ('💬', 'Ask Tara', 'Chat with your contracts in plain English. Get clause references, deadline calculations, and recommendations.', '#4ECDC4'),
+                ('⚖️', 'Compare Mode', 'Side-by-side carrier comparison and version diff analysis. See exactly what changed between contract versions.', '#FF6B6B'),
+                ('📊', 'Performance Tracking', 'Log on-time delivery %, claim resolution times, and dispute rates. Visualize trends over time.', '#FFB347'),
+                ('🧠', 'RAG-Powered', 'Each carrier has its own knowledge base. Answers are grounded in YOUR documents, not hallucinations.', '#4ECDC4')
+            ] %}
+            {% for icon, title, desc, color in features %}
+            <div class="feature-card fade-in-up">
+                <div class="text-4xl mb-4">{{ icon }}</div>
+                <h3 class="font-display text-xl font-bold text-white mb-2">{{ title }}</h3>
+                <p class="text-gray-400 leading-relaxed">{{ desc }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="py-24 px-6 text-center">
+    <div class="max-w-3xl mx-auto">
+        <div class="relative tara-breathe inline-block mb-8">
+            <img src="{{ url_for('static', filename='tara/tara_meditation.png') }}"
+                 alt="Tara meditating"
+                 class="h-40 object-contain mx-auto">
+        </div>
+        <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-6 fade-in-up">
+            Ready to find peace?
+        </h2>
+        <p class="text-gray-400 text-xl mb-10 fade-in-up">
+            Start for free. Upload your first carrier contract and let Tara do the rest.
+        </p>
+        <a href="/signup"
+           class="btn-coral text-xl py-5 px-12 cta-magnetic fade-in-up"
+           style="background: linear-gradient(135deg, var(--coral), var(--gold));">
+            🧘 Begin Your Zen Journey
+        </a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-8 px-6 text-center border-t border-white/10">
+    <div class="text-gray-500">
+        <span class="font-display text-coral font-semibold">ZenTara</span> — 
+        Built with 🧘 for operations teams who deserve peace of mind.
+    </div>
+</footer>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Particle Canvas
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = Array.from({length: 40}, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 3 + 1,
+        dx: (Math.random() - 0.5) * 0.5,
+        dy: (Math.random() - 0.5) * 0.5,
+        alpha: Math.random() * 0.4 + 0.1,
+        color: Math.random() > 0.5 ? '#FF6B6B' : '#FFB347'
+    }));
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.alpha;
+            ctx.fill();
+            p.x += p.dx;
+            p.y += p.dy;
+            if (p.x < 0 || p.x > canvas.width) p.dx = -p.dx;
+            if (p.y < 0 || p.y > canvas.height) p.dy = -p.dy;
+        });
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) e.target.classList.add('visible');
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+
+    // GSAP Hero Animation
+    if (typeof gsap !== 'undefined') {
+        gsap.from('#tara-hero', { y: 40, opacity: 0, duration: 1.2, ease: 'power3.out' });
+        gsap.from('h1', { y: 30, opacity: 0, duration: 1, delay: 0.3, ease: 'power2.out' });
+    }
+</script>
+{% endblock %}

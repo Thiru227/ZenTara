@@ -1,0 +1,458 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — ZenTara{% endblock %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: {% if tara_state.bg_mood == 'critical' %}
+            radial-gradient(ellipse at top, rgba(255,59,48,0.08) 0%, var(--cream) 60%);
+        {% elif tara_state.bg_mood == 'warning' %}
+            radial-gradient(ellipse at top, rgba(255,179,71,0.08) 0%, var(--cream) 60%);
+        {% else %}
+            radial-gradient(ellipse at top, rgba(78,205,196,0.06) 0%, var(--cream) 60%);
+        {% endif %}
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 260px 1fr 300px;
+        gap: 1.5rem;
+        min-height: calc(100vh - 12rem);
+    }
+
+    @media (max-width: 1200px) {
+        .dashboard-grid { grid-template-columns: 240px 1fr; }
+        .right-col { display: none; }
+    }
+    @media (max-width: 768px) {
+        .dashboard-grid { grid-template-columns: 1fr; }
+        .left-col { position: static !important; }
+    }
+
+    .card {
+        background: white;
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.25rem;
+        text-align: center;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        transition: transform 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-2px); }
+
+    .notification-card {
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        margin-bottom: 0.75rem;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    .notification-card:hover {
+        transform: translateX(4px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .notification-card.critical-card {
+        animation: subtle-shake 3s ease-in-out infinite;
+    }
+    @keyframes subtle-shake {
+        0%, 90%, 100% { transform: translateX(0); }
+        91%            { transform: translateX(-2px); }
+        93%            { transform: translateX(2px); }
+        95%            { transform: translateX(-1px); }
+    }
+
+    .carrier-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.25rem;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.05);
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        overflow: hidden;
+    }
+    .carrier-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(255,107,107,0.2);
+        border-color: rgba(255,107,107,0.3);
+    }
+
+    .carrier-badge {
+        width: 36px; height: 36px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-weight: 700;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+    }
+
+    .health-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .health-healthy { background: rgba(78,205,196,0.15); color: #2a8a7e; }
+    .health-warning  { background: rgba(255,179,71,0.2);  color: #b37a00; }
+    .health-critical { background: rgba(255,59,48,0.15);  color: #cc2b22; }
+
+    /* Tara Panel */
+    .tara-panel {
+        position: sticky;
+        top: 5rem;
+    }
+
+    /* Critical BG */
+    {% if tara_state.bg_mood == 'critical' %}
+    .tara-panel { background: linear-gradient(135deg, rgba(255,59,48,0.08), white); }
+    {% elif tara_state.bg_mood == 'warning' %}
+    .tara-panel { background: linear-gradient(135deg, rgba(255,179,71,0.1), white); }
+    {% else %}
+    .tara-panel { background: linear-gradient(135deg, rgba(78,205,196,0.07), white); }
+    {% endif %}
+
+    .chat-mini-input {
+        border: 1.5px solid rgba(255,107,107,0.3);
+        border-radius: 12px;
+        padding: 0.6rem 1rem;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.9rem;
+        outline: none;
+        width: 100%;
+        transition: border 0.2s;
+        background: rgba(255,255,255,0.8);
+    }
+    .chat-mini-input:focus { border-color: var(--coral); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-screen-xl mx-auto px-4 py-6">
+
+    <!-- Dashboard Header -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="font-display text-3xl font-bold" style="color: var(--charcoal);">
+                {% if tara_state.state == 'stressed' %}<i class="fi fi-rr-triangle-warning" style="margin-right:4px"></i> Alert Dashboard{% elif tara_state.state == 'standing' %}<i class="fi fi-rr-clipboard-list" style="margin-right:4px"></i> Operations Dashboard{% else %}<i class="fi fi-rr-leaf" style="margin-right:4px"></i> ZenTara Dashboard{% endif %}
+            </h1>
+            <p class="text-gray-500 mt-1">{{ now_str }}</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="/carriers/new" class="btn-coral">+ New Carrier</a>
+            <a href="/compare" class="btn-ghost"><i class="fi fi-rr-balance-scale-right" style="margin-right:4px"></i> Compare</a>
+        </div>
+    </div>
+
+    <!-- DASHBOARD 3-COL GRID -->
+    <div class="dashboard-grid">
+
+        <!-- ======== LEFT: TARA PANEL ======== -->
+        <div class="left-col">
+            <div class="card tara-panel">
+
+                <!-- Tara Image -->
+                <div class="text-center mb-4">
+                    <div class="relative inline-block">
+                        <img src="{{ url_for('static', filename='tara/' + tara_state.image) }}"
+                             alt="Tara — {{ tara_state.state }}"
+                             class="h-48 object-contain mx-auto
+                             {%- if tara_state.state == 'stressed' %} tara-stressed
+                             {%- elif tara_state.state == 'victory' %} tara-float
+                             {%- else %} tara-breathe{%- endif %}"
+                             id="tara-dashboard"
+                             style="filter: drop-shadow(0 8px 20px rgba(255,107,107,0.25));">
+                    </div>
+                </div>
+
+                <!-- Speech Bubble -->
+                <div class="speech-bubble mb-6 text-sm">
+                    "{{ tara_state.message }}"
+                </div>
+
+                <!-- Health Ring -->
+                <div class="health-ring mb-4">
+                    <svg width="120" height="120" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#f0f0f0" stroke-width="10"/>
+                        <circle cx="60" cy="60" r="50" fill="none"
+                                stroke="{% if health_score > 70 %}var(--teal){% elif health_score > 40 %}var(--gold){% else %}var(--critical){% endif %}"
+                                stroke-width="10"
+                                stroke-linecap="round"
+                                stroke-dasharray="{{ (health_score / 100 * 314.159)|int }} 314.159"
+                                id="health-arc"
+                                style="transition: stroke-dasharray 1s ease;"/>
+                    </svg>
+                    <div class="value" id="health-value">{{ health_score }}</div>
+                </div>
+                <div class="text-center text-sm text-gray-400 mb-6">System Health Score</div>
+
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div class="stat-card">
+                        <div class="text-2xl font-display font-bold" style="color: var(--coral);">{{ total_carriers }}</div>
+                        <div class="text-xs text-gray-400 mt-1">Carriers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="text-2xl font-display font-bold" style="color: var(--teal);">{{ active_slas }}</div>
+                        <div class="text-xs text-gray-400 mt-1">Active SLAs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="text-2xl font-display font-bold" style="color: {% if critical_count > 0 %}var(--critical){% else %}var(--gold){% endif %};">{{ critical_count }}</div>
+                        <div class="text-xs text-gray-400 mt-1">Critical</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="text-2xl font-display font-bold" style="color: var(--gold);">{{ warning_count }}</div>
+                        <div class="text-xs text-gray-400 mt-1">Warnings</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="flex flex-col gap-2">
+                    <a href="/chat" class="btn-coral text-sm justify-center"><i class="fi fi-rr-comment-alt" style="margin-right:4px"></i> Ask Tara</a>
+                    <a href="/alerts" class="btn-ghost text-sm justify-center"><i class="fi fi-rr-bell" style="margin-right:4px"></i> View All Alerts</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======== CENTER: MAIN CONTENT ======== -->
+        <div class="center-col flex flex-col gap-5">
+
+            <!-- NOTIFICATION FEED -->
+            <div class="card">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-display text-xl font-bold" style="color: var(--charcoal);"><i class="fi fi-rr-bell" style="margin-right:6px"></i> Live Alerts</h2>
+                    <div class="flex gap-2 text-xs">
+                        <span class="px-2 py-1 rounded-full font-medium" style="background: rgba(255,59,48,0.1); color: var(--critical);">
+                            {{ critical_count }} Critical
+                        </span>
+                        <span class="px-2 py-1 rounded-full font-medium" style="background: rgba(255,179,71,0.15); color: #b37a00;">
+                            {{ warning_count }} Warning
+                        </span>
+                    </div>
+                </div>
+
+                {% if alerts %}
+                    {% for alert in alerts[:8] %}
+                    <div class="notification-card alert-{{ alert.level.lower() }} {% if alert.level == 'CRITICAL' %}critical-card{% endif %}"
+                         id="alert-{{ alert.id }}">
+
+                        <!-- Level indicator -->
+                        <div class="flex-shrink-0 mt-0.5">
+                            {% if alert.level == 'CRITICAL' %}
+                            <span class="pulse-dot inline-block w-3 h-3 rounded-full" style="background: var(--critical);"></span>
+                            {% elif alert.level == 'WARNING' %}
+                            <span class="pulse-dot inline-block w-3 h-3 rounded-full" style="background: var(--gold);"></span>
+                            {% else %}
+                            <span class="inline-block w-3 h-3 rounded-full" style="background: var(--teal);"></span>
+                            {% endif %}
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between gap-2">
+                                <div>
+                                    <span class="font-semibold text-sm" style="color: var(--charcoal);">{{ alert.title }}</span>
+                                    {% if alert.clause_reference %}
+                                    <span class="mono text-xs ml-2 px-1.5 py-0.5 rounded" style="background: rgba(0,0,0,0.06); color: #666;">
+                                        Clause {{ alert.clause_reference }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                {% if alert.days_remaining is not none %}
+                                <span class="flex-shrink-0 text-xs font-bold px-2 py-1 rounded-full"
+                                      style="background: {{ alert.level_color }}20; color: {{ alert.level_color }};">
+                                    {{ alert.days_remaining }}d
+                                </span>
+                                {% endif %}
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1 leading-relaxed">{{ alert.message }}</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <a href="/chat?q=Tell me about {{ alert.title }}"
+                                   class="text-xs font-medium px-2.5 py-1 rounded-full transition-all"
+                                   style="color: var(--coral); background: rgba(255,107,107,0.1);"
+                                   onclick="openChatWith('{{ alert.title }}'); return false;">
+                                    <i class="fi fi-rr-comment-alt" style="margin-right:2px"></i> Ask Tara
+                                </a>
+                                <button class="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                                        onclick="dismissAlert({{ alert.id }})">
+                                    ✕ Dismiss
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="text-center py-10">
+                    <img src="{{ url_for('static', filename='tara/tara_meditation.png') }}" class="h-20 mx-auto mb-3 opacity-70">
+                    <p class="text-gray-400 font-medium">All clear <i class="fi fi-rr-leaf" style="color:var(--teal)"></i></p>
+                    <p class="text-gray-400 text-sm">No active alerts. Tara is at peace.</p>
+                </div>
+                {% endif %}
+
+                {% if alerts|length > 8 %}
+                <a href="/alerts" class="text-sm text-coral hover:underline mt-2 block text-center"
+                   style="color: var(--coral);">
+                    View {{ alerts|length - 8 }} more alerts →
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- CARRIER CARDS -->
+            <div class="card">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-display text-xl font-bold" style="color: var(--charcoal);"><i class="fi fi-rr-truck-side" style="margin-right:6px"></i> Your Carriers</h2>
+                    <a href="/carriers/new" class="text-sm font-medium" style="color: var(--coral);">+ Add Carrier</a>
+                </div>
+
+                {% if carrier_cards %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {% for cc in carrier_cards %}
+                    <a href="/carrier/{{ cc.carrier.id }}" class="carrier-card">
+                        <div class="flex items-start gap-3 mb-3">
+                            <div class="flex-shrink-0">
+                                {% set logo_slug = cc.carrier.name|lower|replace(' ', '') %}
+                                {% set logo_url = url_for('static', filename='logos/' + logo_slug + '.png') %}
+                                <img src="{{ logo_url }}" alt="{{ cc.carrier.name }}"
+                                     class="w-8 h-8 rounded-lg object-contain p-1"
+                                     style="background: {{ cc.carrier.logo_color }}15; border: 1px solid {{ cc.carrier.logo_color }}30;"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                <div class="w-8 h-8 rounded-lg items-center justify-center text-white font-bold text-[10px] flex-shrink-0"
+                                     style="background: {{ cc.carrier.logo_color }}; display:none;">
+                                    {{ cc.carrier.name[:2].upper() }}
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-semibold text-sm truncate" style="color: var(--charcoal);">{{ cc.carrier.name }}</div>
+                                <div class="text-xs text-gray-400 mt-0.5">{{ cc.sla_count }} SLA version{{ 's' if cc.sla_count != 1 }}</div>
+                            </div>
+                            <div class="health-badge health-{{ cc.status }} flex-shrink-0">
+                                {% if cc.status == 'healthy' %}<i class="fi fi-rr-check-circle" style="color:var(--teal)"></i>{% elif cc.status == 'warning' %}<i class="fi fi-rr-triangle-warning" style="color:var(--gold)"></i>{% else %}<i class="fi fi-rr-exclamation" style="color:var(--critical)"></i>{% endif %}
+                                {{ cc.health_score }}%
+                            </div>
+                        </div>
+
+                        {% if cc.active_sla %}
+                        <div class="text-xs mono text-gray-400 mb-2">
+                            Active: {{ cc.active_sla.version_label }} · {{ cc.active_sla.upload_date.strftime('%b %d') if cc.active_sla.upload_date else '' }}
+                        </div>
+                        {% else %}
+                        <div class="text-xs text-orange-400 mb-2"><i class="fi fi-rr-triangle-warning" style="margin-right:2px"></i> No SLA uploaded</div>
+                        {% endif %}
+
+                        {% if cc.alerts %}
+                        <div class="text-xs font-medium" style="color: {{ cc.alerts[0].level_color }};">
+                            {{ cc.alerts[0].level_emoji }} {{ cc.alerts[0].title[:40] }}{% if cc.alerts[0].title|length > 40 %}...{% endif %}
+                        </div>
+                        {% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-12">
+                    <div class="text-5xl mb-3"><i class="fi fi-rr-truck-side" style="font-size:3rem;color:var(--coral)"></i></div>
+                    <p class="text-gray-500 font-medium mb-2">No carriers yet</p>
+                    <p class="text-gray-400 text-sm mb-4">Add your first carrier to get started.</p>
+                    <a href="/carriers/new" class="btn-coral">Add Your First Carrier</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ======== RIGHT: MINI CHAT ======== -->
+        <div class="right-col">
+            <div class="card" style="position: sticky; top: 5rem; display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Tara Hello -->
+                <div class="text-center">
+                    <img src="{{ url_for('static', filename='tara/tara_closeup.png') }}"
+                         alt="Tara" class="w-20 h-20 object-contain mx-auto rounded-full ring-2 ring-coral">
+                    <p class="font-semibold mt-2" style="color: var(--charcoal);">***Ask Tara***</p>
+                    <p class="text-xs text-gray-400">Your AI contract advisor</p>
+                </div>
+
+                <div class="chat-bubble-tara">
+                    <p class="text-sm text-gray-700">
+                        Need help with your contracts? Ask me about deadlines, clauses, or liability limits!
+                    </p>
+                </div>
+
+                <!-- Quick Questions → redirect to /chat -->
+                <div class="flex flex-col gap-1.5">
+                    {% set quick_qs = [
+                        "What are my upcoming deadlines?",
+                        "Which carrier has the best SLA?",
+                        "Summarize my latest contracts"
+                    ] %}
+                    {% for q in quick_qs %}
+                    <a href="/chat?q={{ q | urlencode }}" class="text-left text-xs px-3 py-2 rounded-lg transition-all hover:scale-[1.01]"
+                       style="background: rgba(255,107,107,0.08); color: var(--coral); border: 1px solid rgba(255,107,107,0.2); text-decoration:none;">
+                        {{ q }}
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <a href="/chat" class="btn-coral text-sm text-center" style="text-decoration:none;">
+                    <i class="fi fi-rr-comment-alt" style="margin-right:4px"></i> Open Full Chat
+                </a>
+            </div>
+        </div>
+
+    </div><!-- /dashboard-grid -->
+</div>
+
+<!-- Dismiss Alert Modal -->
+<script>
+async function dismissAlert(alertId) {
+    try {
+        await fetch(`/alerts/dismiss/${alertId}`, { method: 'POST' });
+        const el = document.getElementById(`alert-${alertId}`);
+        if (el) {
+            el.style.transition = 'all 0.3s';
+            el.style.opacity = '0';
+            el.style.maxHeight = el.offsetHeight + 'px';
+            setTimeout(() => { el.style.maxHeight = '0'; el.style.padding = '0'; el.style.margin = '0'; }, 100);
+            setTimeout(() => el.remove(), 400);
+        }
+    } catch(e) { console.error(e); }
+}
+
+function openChatWith(title) {
+    window.location.href = '/chat?q=' + encodeURIComponent('Tell me about: ' + title);
+}
+
+// Animate health ring on load
+window.addEventListener('load', () => {
+    const arc = document.getElementById('health-arc');
+    const value = document.getElementById('health-value');
+    if (arc && value) {
+        let current = 0;
+        const target = {{ health_score }};
+        const interval = setInterval(() => {
+            if (current >= target) {
+                clearInterval(interval);
+                return;
+            }
+            current = Math.min(current + 2, target);
+            arc.setAttribute('stroke-dasharray', `${current / 100 * 314.159} 314.159`);
+            value.textContent = current;
+        }, 15);
+    }
+});
+</script>
+{% endblock %}

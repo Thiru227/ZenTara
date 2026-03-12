@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ZenTara — Carrier Contract Peace of Mind{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}ZenTara helps you manage carrier contracts, track deadlines, and stay ahead of SLA obligations with AI-powered insights.{% endblock %}">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧘</text></svg>">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        coral:   '#FF6B6B',
+                        gold:    '#FFB347',
+                        cream:   '#FFF8F0',
+                        charcoal:'#1E1E2E',
+                        teal:    '#4ECDC4',
+                        amber:   '#FFA500',
+                        critical:'#FF3B30',
+                    },
+                    fontFamily: {
+                        display: ['Playfair Display', 'serif'],
+                        body:    ['DM Sans', 'sans-serif'],
+                        mono:    ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Flaticons -->
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root {
+            --coral:    #FF6B6B;
+            --gold:     #FFB347;
+            --cream:    #FFF8F0;
+            --charcoal: #1E1E2E;
+            --teal:     #4ECDC4;
+            --amber:    #FFA500;
+            --critical: #FF3B30;
+        }
+
+        * { box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--cream); margin: 0; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+        ::-webkit-scrollbar-thumb { background: var(--coral); border-radius: 3px; }
+
+        /* Ring utilities for custom colours */
+        .ring-coral { --tw-ring-color: #FF6B6B; }
+        .ring-2 { box-shadow: 0 0 0 2px var(--tw-ring-color, #FF6B6B); }
+        .accent-coral { accent-color: var(--coral); }
+        /* TARA ANIMATIONS */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50%       { transform: translateY(-10px); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,107,107,0.3); }
+            50%       { box-shadow: 0 0 40px rgba(255,107,107,0.7); }
+        }
+        @keyframes mandala-rotate {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        @keyframes tara-shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 50%, 90% { transform: translateX(-4px); }
+            30%, 70%      { transform: translateX(4px); }
+        }
+        @keyframes breathing {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50%       { transform: scale(1.02); opacity: 0.95; }
+        }
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.5; transform: scale(1.5); }
+        }
+        @keyframes gradient-shift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes shimmer {
+            0%   { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .tara-float       { animation: float 3s ease-in-out infinite; }
+        .tara-stressed    { animation: tara-shake 0.5s ease-in-out infinite; }
+        .tara-breathe     { animation: breathing 4s ease-in-out infinite; }
+        .glow-coral       { animation: pulse-glow 2s ease-in-out infinite; }
+        .mandala-spin     { animation: mandala-rotate 20s linear infinite; }
+        .slide-up         { animation: slide-up 0.6s ease forwards; }
+        .pulse-dot        { animation: pulse-dot 1s ease-in-out infinite; }
+        .gradient-bg      { 
+            background: linear-gradient(135deg, var(--coral), var(--gold), var(--teal), var(--coral));
+            background-size: 400% 400%;
+            animation: gradient-shift 8s ease infinite;
+        }
+
+        /* NOTIFICATION LEVELS */
+        .alert-info     { border-left: 4px solid var(--teal); }
+        .alert-warning  { border-left: 4px solid var(--gold); }
+        .alert-critical { border-left: 4px solid var(--critical); }
+
+        /* GLASSMORPHISM CARDS */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .glass-dark {
+            background: rgba(30, 30, 46, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* HEALTH RING */
+        .health-ring {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .health-ring svg { transform: rotate(-90deg); }
+        .health-ring .value {
+            position: absolute;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--coral);
+        }
+
+        /* BUTTONS */
+        .btn-coral {
+            background: var(--coral);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-coral:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+        }
+        .btn-ghost {
+            background: transparent;
+            color: var(--coral);
+            border: 2px solid var(--coral);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-ghost:hover {
+            background: var(--coral);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* SPEECH BUBBLE */
+        .speech-bubble {
+            position: relative;
+            background: white;
+            border-radius: 16px;
+            padding: 1rem 1.2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            font-style: italic;
+            color: #555;
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 12px solid transparent;
+            border-top-color: white;
+            border-bottom: 0;
+        }
+
+        /* CARRIER LOGO BADGE */
+        .carrier-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* NAV */
+        .nav-link {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* VERSION TIMELINE */
+        .version-timeline {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            scrollbar-width: thin;
+        }
+        .version-pill {
+            flex-shrink: 0;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .version-pill.active-version {
+            background: var(--coral);
+            color: white;
+        }
+        .version-pill.inactive-version {
+            background: rgba(255,107,107,0.1);
+            color: var(--coral);
+            border-color: rgba(255,107,107,0.3);
+        }
+        .version-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+        }
+
+        /* DRAG DROP ZONE */
+        .drop-zone {
+            border: 2px dashed rgba(255,107,107,0.4);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255,107,107,0.03);
+        }
+        .drop-zone:hover, .drop-zone.drag-over {
+            border-color: var(--coral);
+            background: rgba(255,107,107,0.08);
+            transform: scale(1.01);
+        }
+
+        /* CHAT BUBBLES */
+        .chat-bubble-tara {
+            background: linear-gradient(135deg, rgba(255,107,107,0.1), rgba(255,179,71,0.1));
+            border: 1px solid rgba(255,107,107,0.2);
+            border-radius: 16px 16px 16px 4px;
+            padding: 1rem 1.2rem;
+            max-width: 85%;
+            position: relative;
+        }
+        .chat-bubble-user {
+            background: var(--coral);
+            color: white;
+            border-radius: 16px 16px 4px 16px;
+            padding: 1rem 1.2rem;
+            max-width: 75%;
+            margin-left: auto;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .three-col { grid-template-columns: 1fr !important; }
+        }
+
+        /* FLASH MESSAGES */
+        .flash-success { background: rgba(78,205,196,0.15); border-left: 4px solid var(--teal); color: #2a6e6a; }
+        .flash-error   { background: rgba(255,59,48,0.12);  border-left: 4px solid var(--critical); color: #c0392b; }
+        .flash-info    { background: rgba(255,107,107,0.1); border-left: 4px solid var(--coral); color: #c0392b; }
+
+        /* TOOLTIP */
+        .tooltip { position: relative; }
+        .tooltip::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--charcoal);
+            color: white;
+            padding: 0.3rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 100;
+        }
+        .tooltip:hover::after { opacity: 1; }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="font-body bg-cream min-h-screen">
+
+    <!-- NAVBAR -->
+    {% if request.endpoint not in ['dashboard.landing'] %}
+    <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" 
+         style="background: rgba(30, 30, 46, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 30px rgba(0,0,0,0.2);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="/" class="flex items-center gap-3">
+                    <img src="{{ url_for('static', filename='tara/tara_closeup.png') }}"
+                         alt="Tara" class="w-9 h-9 object-contain rounded-full ring-2 ring-coral bg-cream/10">
+                    <span class="font-display text-xl font-bold text-white">ZenTara</span>
+                    <span class="hidden sm:inline text-xs text-gray-400 font-mono">v2.1</span>
+                </a>
+
+                <!-- Nav Links -->
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="/dashboard" class="nav-link {% if request.endpoint == 'dashboard.dashboard' %}active{% endif %}"><i class="fi fi-rr-chart-histogram" style="margin-right:4px"></i> Dashboard</a>
+                    <a href="/carriers" class="nav-link {% if 'carriers' in request.endpoint %}active{% endif %}"><i class="fi fi-rr-truck-side" style="margin-right:4px"></i> Carriers</a>
+                    <a href="/compare" class="nav-link {% if request.endpoint == 'compare.compare_page' %}active{% endif %}"><i class="fi fi-rr-balance-scale-right" style="margin-right:4px"></i> Compare</a>
+                    <a href="/chat" class="nav-link {% if request.endpoint == 'chat.chat_page' %}active{% endif %}"><i class="fi fi-rr-comment-alt" style="margin-right:4px"></i> Ask Tara</a>
+                    <a href="/alerts" class="nav-link {% if request.endpoint == 'alerts.all_alerts' %}active{% endif %}"><i class="fi fi-rr-bell" style="margin-right:4px"></i> Alerts</a>
+                </div>
+
+                <!-- Right Side -->
+                <div class="flex items-center gap-3">
+                    {% if current_user %}
+                        <a href="/alerts" class="relative">
+                            <i class="fi fi-sr-bell" style="color:#FFB347;font-size:1.25rem"></i>
+                            <span id="alert-badge" class="absolute -top-1 -right-1 bg-critical text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden"></span>
+                        </a>
+                        <a href="/carriers/new" class="btn-coral text-sm py-2 px-4">
+                            + Add Carrier
+                        </a>
+                        <!-- User dropdown -->
+                        <div class="relative" id="user-menu">
+                            <button onclick="document.getElementById('user-dropdown').classList.toggle('hidden')" 
+                                    class="flex items-center gap-2 px-3 py-1.5 rounded-full transition-all hover:bg-white/10" style="cursor:pointer;background:none;border:none;">
+                                {% if current_user.avatar_url %}
+                                    <img src="{{ current_user.avatar_url }}" alt="{{ current_user.display_name }}" class="w-8 h-8 rounded-full object-cover ring-2 ring-coral">
+                                {% else %}
+                                    <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background: linear-gradient(135deg, var(--coral), var(--gold));">
+                                        {{ current_user.initials }}
+                                    </div>
+                                {% endif %}
+                                <span class="text-white text-sm font-medium hidden sm:inline">{{ current_user.display_name }}</span>
+                                <i class="fi fi-rr-angle-small-down text-gray-400" style="font-size:0.75rem"></i>
+                            </button>
+                            <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 rounded-xl glass shadow-lg border border-white/10 py-2 z-50" style="background: rgba(30,30,46,0.95);">
+                                <div class="px-4 py-2 border-b border-white/10">
+                                    <div class="text-white text-sm font-semibold">{{ current_user.display_name }}</div>
+                                    <div class="text-gray-400 text-xs">{{ current_user.email }}</div>
+                                </div>
+                                {% if current_user.is_admin %}
+                                <a href="/admin/users" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
+                                    <i class="fi fi-rr-shield-check" style="font-size:0.85rem"></i> Admin Panel
+                                </a>
+                                {% endif %}
+                                <a href="/logout" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:text-coral hover:bg-white/10 transition-colors">
+                                    <i class="fi fi-rr-sign-out-alt" style="font-size:0.85rem"></i> Log Out
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="/login" class="btn-ghost text-sm py-2 px-4" style="color:white; border-color: rgba(255,255,255,0.3);">
+                            Log In
+                        </a>
+                        <a href="/signup" class="btn-coral text-sm py-2 px-4">
+                            Sign Up
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="h-16"></div> <!-- Spacer -->
+    {% endif %}
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="fixed top-20 right-4 z-50 flex flex-col gap-2" id="flash-container">
+        {% for category, message in messages %}
+        <div class="flash-{{ category }} glass rounded-xl px-4 py-3 text-sm font-medium shadow-lg slide-up flex items-center gap-2" style="min-width:280px;">
+            <i class="fi {{ 'fi-rr-check' if category == 'success' else 'fi-rr-triangle-warning' if category == 'error' else 'fi-rr-info' }}"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        setTimeout(() => {
+            const container = document.getElementById('flash-container');
+            if (container) container.remove();
+        }, 4000);
+    </script>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Page Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Alert Badge Updater -->
+    <script>
+        async function updateAlertBadge() {
+            try {
+                const res = await fetch('/api/alerts');
+                const alerts = await res.json();
+                const badge = document.getElementById('alert-badge');
+                if (badge) {
+                    const count = alerts.filter(a => a.level === 'CRITICAL').length;
+                    if (count > 0) {
+                        badge.textContent = count > 9 ? '9+' : count;
+                        badge.classList.remove('hidden');
+                    } else {
+                        badge.classList.add('hidden');
+                    }
+                }
+            } catch(e) {}
+        }
+        updateAlertBadge();
+        setInterval(updateAlertBadge, 60000); // Refresh every minute
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

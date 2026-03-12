@@ -1,0 +1,17 @@
+# ── Core ────────────────────────────────────────
+flask==3.0.0
+Werkzeug==3.0.1
+flask-sqlalchemy==3.1.1
+python-dotenv==1.0.0
+requests>=2.31.0
+
+# ── AI & Document Processing ────────────────────
+google-generativeai==0.5.0
+PyMuPDF==1.24.0
+chromadb==0.4.22
+
+# ── Production Server ──────────────────────────
+gunicorn>=21.2.0
+
+# ── PostgreSQL (Render) ─────────────────────────
+psycopg2-binary>=2.9.9
