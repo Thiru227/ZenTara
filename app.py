@@ -55,6 +55,19 @@ def create_app(config_name='development'):
     def health_check():
         return jsonify({'status': 'healthy', 'service': 'zentara'}), 200
 
+    # ── PWA Support (Service Worker & Manifest) ──────────────────────
+    @app.route('/sw.js')
+    def service_worker():
+        return app.send_static_file('sw.js')
+
+    @app.route('/OneSignalSDKWorker.js')
+    def onesignal_worker():
+        return app.send_static_file('sw.js')
+
+    @app.route('/manifest.json')
+    def manifest():
+        return app.send_static_file('manifest.json')
+
     # Create all tables on first run
     with app.app_context():
         # Import all models so SQLAlchemy knows about them

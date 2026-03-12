@@ -6,6 +6,32 @@
     <title>{% block title %}ZenTara — Carrier Contract Peace of Mind{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}ZenTara helps you manage carrier contracts, track deadlines, and stay ahead of SLA obligations with AI-powered insights.{% endblock %}">
 
+    <!-- PWA & Push Notifications Setup -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#14b8a6">
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      // 1. Initialize OneSignal
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(function(OneSignal) {
+        OneSignal.init({
+          appId: "75c70233-bd82-4d22-8490-dd752a36f79b", // Replace with your actual App ID
+          notifyButton: { enable: true }, // Optional prompt button
+        });
+      });
+
+      // 2. Register Custom Service Worker for PWA Offline Cache
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').then((reg) => {
+            console.log('PWA Service Worker registered!', reg.scope);
+          }).catch((err) => {
+            console.error('ServiceWorker registration failed:', err);
+          });
+        });
+      }
+    </script>
+
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧘</text></svg>">
     <!-- Fonts -->
