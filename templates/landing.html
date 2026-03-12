@@ -208,6 +208,18 @@
     </div>
 </section>
 
+<!-- SUPPORTED CARRIERS LOGO CLOUD -->
+<section class="py-12 px-6 border-y border-white/5 bg-white/5 relative z-10 hidden md:block">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 opacity-50 fade-in-up">
+        <div class="text-sm tracking-widest uppercase font-mono text-gray-400">Supported Carrier SLAs</div>
+        <div class="flex items-center gap-12 grayscale brightness-200">
+            <img src="{{ url_for('static', filename='logos/fedex.png') }}" alt="FedEx" class="h-8 object-contain">
+            <img src="{{ url_for('static', filename='logos/ups.png') }}" alt="UPS" class="h-8 object-contain">
+            <img src="{{ url_for('static', filename='logos/dhl.png') }}" alt="DHL" class="h-6 object-contain">
+        </div>
+    </div>
+</section>
+
 <!-- HOW IT WORKS -->
 <section class="py-24 px-6">
     <div class="max-w-6xl mx-auto">
@@ -293,9 +305,13 @@
 
 <!-- Footer -->
 <footer class="py-8 px-6 text-center border-t border-white/10">
-    <div class="text-gray-500">
+    <div class="text-gray-500 mb-4">
         <span class="font-display text-coral font-semibold">ZenTara</span> — 
         Built with 🧘 for operations teams who deserve peace of mind.
+    </div>
+    <div class="flex justify-center gap-6 text-sm text-gray-500">
+        <a href="/privacy" class="hover:text-coral transition-colors">Privacy Policy</a>
+        <a href="/terms" class="hover:text-coral transition-colors">Terms of Service</a>
     </div>
 </footer>
 {% endblock %}

@@ -11,6 +11,14 @@ dashboard_bp = Blueprint('dashboard', __name__)
 def landing():
     return render_template('landing.html')
 
+@dashboard_bp.route('/privacy')
+def privacy_policy():
+    return render_template('privacy_policy.html')
+
+@dashboard_bp.route('/terms')
+def terms_of_service():
+    return render_template('terms_of_service.html')
+
 
 @dashboard_bp.route('/dashboard')
 @login_required

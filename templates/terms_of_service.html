@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Terms of Service | ZenTara{% endblock %}
+
+{% block content %}
+<div class="min-h-screen pt-24 pb-12 px-6">
+    <div class="max-w-4xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-md text-gray-300">
+        <h1 class="font-display text-4xl text-white mb-6">Terms of Service</h1>
+        <p class="mb-4">Last Updated: {{ now_str if now_str else "March 13, 2026" }}</p>
+        
+        <div class="space-y-6 text-sm leading-relaxed">
+            <section>
+                <h2 class="text-xl font-bold text-gold mb-2">1. Agreement to Terms</h2>
+                <p>By accessing or using ZenTara, you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access the service.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-gold mb-2">2. Description of Service</h2>
+                <p>ZenTara is a carrier contract management and insights platform that provides AI-powered analysis of Service Level Agreements (SLAs), proactive timeline tracking, performance analytics, and related tools to improve logistics operations. We reserve the right to withdraw or amend the service at our sole discretion without notice.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-gold mb-2">3. User Accounts & Google OAuth</h2>
+                <p>When you create an account with us, including via Google OAuth, you must provide us with information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service. You are responsible for safeguarding the password and for any activities or actions under your password.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-gold mb-2">4. Uploaded Content and Data Privacy</h2>
+                <p>Our Service allows you to post, link, store, share and otherwise make available certain information, text, graphics, or PDF SLAs ("Content"). You retain all of your ownership rights in your Content. By uploading, you grant us the right to process that content using our local and third-party AI systems (e.g., Google Gemini, Anthropic Claude) strictly for the purpose of delivering the Service to you. We do not use your proprietary documents to train external foundation models.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-gold mb-2">5. Limitation of Liability</h2>
+                <p>In no event shall ZenTara, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Service; (ii) any conduct or content of any third party on the Service; (iii) any content obtained from the Service; and (iv) unauthorized access, use or alteration of your transmissions or content.</p>
+            </section>
+            
+            <section>
+                <h2 class="text-xl font-bold text-gold mb-2">6. Warranty Disclaimer</h2>
+                <p>Your use of the Service is at your sole risk. The Service is provided on an "AS IS" and "AS AVAILABLE" basis. The AI analysis provided by Tara is for operational guidance and does not constitute formal legal advice. Always consult your legal counsel regarding specific SLA disputes.</p>
+            </section>
+        </div>
+        
+        <div class="mt-8 text-center pt-8 border-t border-white/10">
+            <a href="/" class="text-gold hover:text-white transition-colors duration-300">← Back to Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -68,6 +68,10 @@ def create_app(config_name='development'):
     def manifest():
         return app.send_static_file('manifest.json')
 
+    @app.route('/.well-known/assetlinks.json')
+    def assetlinks():
+        return app.send_static_file('assetlinks.json')
+
     # Create all tables on first run
     with app.app_context():
         # Import all models so SQLAlchemy knows about them

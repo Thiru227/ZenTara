@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy | ZenTara{% endblock %}
+
+{% block content %}
+<div class="min-h-screen pt-24 pb-12 px-6">
+    <div class="max-w-4xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-md text-gray-300">
+        <h1 class="font-display text-4xl text-white mb-6">Privacy Policy</h1>
+        <p class="mb-4">Last Updated: {{ now_str if now_str else "March 13, 2026" }}</p>
+        
+        <div class="space-y-6 text-sm leading-relaxed">
+            <section>
+                <h2 class="text-xl font-bold text-coral mb-2">1. Introduction</h2>
+                <p>Welcome to ZenTara ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice or our practices with regard to your personal information, please contact us at codeapi736@gmail.com.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-coral mb-2">2. Information We Collect</h2>
+                <p>We collect personal information that you voluntarily provide to us when you register on the ZenTara platform, express an interest in obtaining information about us or our products, participate in activities on the platform, or otherwise contact us. This includes:</p>
+                <ul class="list-disc list-inside mt-2 ml-4">
+                    <li>Email address</li>
+                    <li>First name and last name</li>
+                    <li>Google Account data (if you sign in using Google OAuth)</li>
+                    <li>Carrier contracts and SLA documents uploaded for analysis</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-coral mb-2">3. How We Use Your Information</h2>
+                <p>We use the personal information collected via our platform for a variety of business purposes described below. We process your personal information for these purposes in reliance on our legitimate business interests, in order to enter into or perform a contract with you, with your consent, and/or for compliance with our legal obligations.</p>
+                <ul class="list-disc list-inside mt-2 ml-4">
+                    <li>To facilitate account creation and logon process.</li>
+                    <li>To deliver services to the user (e.g., SLA parsing, automated notification alerts).</li>
+                    <li>To respond to user inquiries and offer support.</li>
+                    <li>To fulfill and manage your orders and subscription.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-coral mb-2">4. Your Google Account Data</h2>
+                <p>If you choose to register or log in using your Google account via OAuth, we will receive certain profile information about you from your Google provider. The profile information we receive will vary depending on the provider, but will often include your name, email address, and profile picture. We will use the information we receive only for the purposes that are described in this privacy notice or that are otherwise made clear to you on the relevant services.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-coral mb-2">5. Data Retention and Security</h2>
+                <p>We keep your information for as long as necessary to fulfill the purposes outlined in this privacy notice unless otherwise required by law. We have implemented appropriate technical and organizational security measures designed to protect the security of any personal information we process, including the secure storage of vector embeddings for your documents locally using ChromaDB, not exposing raw text externally.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold text-coral mb-2">6. Contact Us</h2>
+                <p>If you have questions or comments about this notice, you may email us at codeapi736@gmail.com.</p>
+            </section>
+        </div>
+        
+        <div class="mt-8 text-center pt-8 border-t border-white/10">
+            <a href="/" class="text-coral hover:text-white transition-colors duration-300">← Back to Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
