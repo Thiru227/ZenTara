@@ -432,7 +432,8 @@
                     <span class="hidden sm:inline text-xs text-gray-400 font-mono">v2.1</span>
                 </a>
 
-                <!-- Nav Links (Desktop) -->
+                <!-- Nav Links (Desktop) — only after login -->
+                {% if current_user %}
                 <div class="hidden md:flex items-center gap-1">
                     <a href="/dashboard" class="nav-link {% if request.endpoint == 'dashboard.dashboard' %}active{% endif %}"><i class="fi fi-rr-chart-histogram" style="margin-right:4px"></i> Dashboard</a>
                     <a href="/carriers" class="nav-link {% if 'carriers' in request.endpoint %}active{% endif %}"><i class="fi fi-rr-truck-side" style="margin-right:4px"></i> Carriers</a>
@@ -440,6 +441,7 @@
                     <a href="/chat" class="nav-link {% if request.endpoint == 'chat.chat_page' %}active{% endif %}"><i class="fi fi-rr-comment-alt" style="margin-right:4px"></i> Ask Tara</a>
                     <a href="/alerts" class="nav-link {% if request.endpoint == 'alerts.all_alerts' %}active{% endif %}"><i class="fi fi-rr-bell" style="margin-right:4px"></i> Alerts</a>
                 </div>
+                {% endif %}
 
                 <!-- Right Side -->
                 <div class="flex items-center gap-3">
