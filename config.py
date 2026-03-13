@@ -81,23 +81,8 @@ class DevelopmentConfig(Config):
     if _db_url.startswith('postgres://'):
         _db_url = _db_url.replace('postgres://', 'postgresql://', 1)
 
-    # Auto-fallback to SQLite if Supabase DNS is unreachable (dev only)
-    if _db_url.startswith('postgresql'):
-        try:
-            import socket
-            host = _db_url.split('@')[1].split(':')[0] if '@' in _db_url else ''
-            if host:
-                socket.setdefaulttimeout(3)
-                socket.getaddrinfo(host, 5432)
-                socket.setdefaulttimeout(None)
-        except Exception:
-            import warnings
-            warnings.warn(
-                "Supabase host unreachable — falling back to local SQLite. "
-                "Check your network/firewall or VPN."
-            )
-            _db_url = 'sqlite:///zentara.db'
-
+    # Auto-fallback to SQLite only if no DATABASE_URL is defined,
+    # otherwise trust the provided URL (e.g., Supabase Session/Transaction pooler)
     SQLALCHEMY_DATABASE_URI = _db_url
 
 
