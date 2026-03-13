@@ -251,9 +251,11 @@
                             {% if not sla.is_active %}
                             <button class="text-xs font-medium px-3 py-1.5 rounded-full transition-colors cursor-pointer"
                                     style="color: var(--coral); background: rgba(255,107,107,0.1);"
-                                    onclick="setActiveVersion({{ carrier.id }}, {{ sla.id }})">
-                                Set Active
-                            </button>
+                                    onclick="setActiveVersion({{ carrier.id }}, {{ sla.id }})">Set Active</button>
+                            {% else %}
+                            <button class="text-xs font-medium px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+                                    style="color: #b37a00; background: rgba(255,179,71,0.12);"
+                                    onclick="deactivateSLA({{ carrier.id }}, {{ sla.id }})">⏸ Deactivate</button>
                             {% endif %}
                             <button class="text-xs font-medium px-3 py-1.5 rounded-full transition-colors cursor-pointer"
                                     style="color: #c44; background: rgba(255,60,48,0.08);"
@@ -273,40 +275,43 @@
                 {% endif %}
             </div>
 
-            <!-- C: Extracted Clauses -->
+            <!-- C: Extracted Clauses (Collapsible) -->
             {% if active_clauses %}
             <div class="card">
-                <h2 class="font-display text-xl font-bold mb-4" style="color: var(--charcoal);">
-                    🔍 Key Clauses Extracted
-                    {% if active_sla %}
-                    <span class="mono text-sm font-normal text-gray-400 ml-2">{{ active_sla.version_label }}</span>
-                    {% endif %}
-                </h2>
+                <details>
+                    <summary class="cursor-pointer font-display text-xl font-bold" style="color: var(--charcoal); list-style: none;">
+                        🔍 Key Clauses Extracted
+                        {% if active_sla %}
+                        <span class="mono text-sm font-normal text-gray-400 ml-2">{{ active_sla.version_label }}</span>
+                        {% endif %}
+                        <span class="text-sm font-normal text-coral ml-2">▸ Click to expand</span>
+                    </summary>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {% for clause in active_clauses %}
-                    <div class="clause-card">
-                        <div class="flex items-start gap-2 mb-2">
-                            <span class="text-xl flex-shrink-0">{{ clause.icon }}</span>
-                            <div class="flex-1 min-w-0">
-                                <div class="text-sm font-semibold" style="color: var(--charcoal);">{{ clause.clause_title }}</div>
-                                {% if clause.clause_number %}
-                                <div class="mono text-xs text-gray-400">Clause {{ clause.clause_number }} · p.{{ clause.page_number }}</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                        {% for clause in active_clauses %}
+                        <div class="clause-card">
+                            <div class="flex items-start gap-2 mb-2">
+                                <span class="text-xl flex-shrink-0">{{ clause.icon }}</span>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-sm font-semibold" style="color: var(--charcoal);">{{ clause.clause_title }}</div>
+                                    {% if clause.clause_number %}
+                                    <div class="mono text-xs text-gray-400">Clause {{ clause.clause_number }} · p.{{ clause.page_number }}</div>
+                                    {% endif %}
+                                </div>
+                                {% if clause.extracted_value %}
+                                <span class="flex-shrink-0 mono text-xs font-bold px-2 py-1 rounded"
+                                      style="background: rgba(255,107,107,0.1); color: var(--coral); white-space: nowrap;">
+                                    {{ clause.extracted_value }}
+                                </span>
                                 {% endif %}
                             </div>
-                            {% if clause.extracted_value %}
-                            <span class="flex-shrink-0 mono text-xs font-bold px-2 py-1 rounded"
-                                  style="background: rgba(255,107,107,0.1); color: var(--coral); white-space: nowrap;">
-                                {{ clause.extracted_value }}
-                            </span>
-                            {% endif %}
+                            <p class="text-xs text-gray-500 leading-relaxed">
+                                {{ clause.clause_text[:150] }}{% if clause.clause_text|length > 150 %}...{% endif %}
+                            </p>
                         </div>
-                        <p class="text-xs text-gray-500 leading-relaxed">
-                            {{ clause.clause_text[:150] }}{% if clause.clause_text|length > 150 %}...{% endif %}
-                        </p>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
-                </div>
+                </details>
             </div>
             {% endif %}
 
@@ -561,6 +566,13 @@ async function deleteSLA(carrierId, slaId, version) {
         if (row) row.style.display = 'none';
         setTimeout(() => window.location.reload(), 500);
     }
+}
+
+async function deactivateSLA(carrierId, slaId) {
+    if (!confirm('Deactivate this SLA? It will no longer be monitored for deadlines.')) return;
+    const res = await fetch(`/carrier/${carrierId}/deactivate-sla/${slaId}`, { method: 'POST' });
+    const data = await res.json();
+    if (data.success) window.location.reload();
 }
 
 // Carrier-scoped chat

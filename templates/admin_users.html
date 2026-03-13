@@ -203,13 +203,19 @@
     <!-- Search + Table -->
     <div class="user-table-wrapper">
         <!-- Toolbar -->
-        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 flex-wrap gap-3">
             <div class="relative">
                 <i class="fi fi-rr-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
                 <input type="text" class="search-admin" placeholder="Search users..." id="user-search"
                        onkeyup="filterUsers()">
             </div>
-            <span class="text-gray-400 text-sm font-mono">{{ users|length }} users</span>
+            <div class="flex items-center gap-3">
+                <button class="action-btn" onclick="sendTestNotification()" id="notify-btn"
+                        style="background: rgba(255,59,48,0.08); color: #cc2b22; border-color: rgba(255,59,48,0.2);">
+                    🔔 Send Alert to All Users
+                </button>
+                <span class="text-gray-400 text-sm font-mono">{{ users|length }} users</span>
+            </div>
         </div>
 
         <table class="user-table" id="users-table">
@@ -355,5 +361,38 @@
     document.getElementById('delete-modal').addEventListener('click', function(e) {
         if (e.target === this) closeDeleteModal();
     });
+
+    async function sendTestNotification() {
+        const btn = document.getElementById('notify-btn');
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+        try {
+            const res = await fetch('/admin/send-notification', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: '⚠️ Tara Alert: Critical SLA Deadline',
+                    message: 'One or more carrier contracts have deadlines expiring within 48 hours. Open ZenTara to review immediately.',
+                    type: 'stressed'
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                btn.textContent = '✅ Sent!';
+                btn.style.color = '#2a9d8f';
+                btn.style.background = 'rgba(78,205,196,0.1)';
+            } else {
+                btn.textContent = '❌ Failed';
+            }
+        } catch(e) {
+            btn.textContent = '❌ Failed';
+        }
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = '🔔 Send Alert to All Users';
+            btn.style.color = '#cc2b22';
+            btn.style.background = 'rgba(255,59,48,0.08)';
+        }, 3000);
+    }
 </script>
 {% endblock %}

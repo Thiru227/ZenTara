@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, jsonify
+import os
+import requests as http_requests
 from models.carrier import Carrier
 from models.sla import Alert, SLADocument
 from services.deadline_service import get_active_alerts, get_dashboard_tara_state, get_system_health_score
@@ -18,6 +20,47 @@ def privacy_policy():
 @dashboard_bp.route('/terms')
 def terms_of_service():
     return render_template('terms_of_service.html')
+
+
+@dashboard_bp.route('/integrations')
+@login_required
+def integrations():
+    return render_template('integrations.html')
+
+
+@dashboard_bp.route('/admin/send-notification', methods=['POST'])
+@login_required
+def admin_send_notification():
+    """Send a push notification to all users via OneSignal REST API."""
+    data = request.get_json() or {}
+    title = data.get('title', '⚠️ Tara Alert')
+    message = data.get('message', 'Check your ZenTara dashboard for important updates.')
+
+    onesignal_app_id = os.environ.get('ONESIGNAL_APP_ID', '75c70233-bd82-4d22-8490-dd752a36f79b')
+    onesignal_api_key = os.environ.get('ONESIGNAL_API_KEY', '')
+
+    if not onesignal_api_key:
+        # If no API key, still return success for demo purposes
+        return jsonify({'success': True, 'message': 'Demo mode — notification simulated (no OneSignal API key set).'})
+
+    headers = {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': f'Basic {onesignal_api_key}'
+    }
+    payload = {
+        'app_id': onesignal_app_id,
+        'included_segments': ['Subscribed Users'],
+        'headings': {'en': title},
+        'contents': {'en': message},
+        'chrome_web_icon': '/static/icon-192x192.png',
+        'url': '/dashboard'
+    }
+
+    try:
+        resp = http_requests.post('https://onesignal.com/api/v1/notifications', json=payload, headers=headers)
+        return jsonify({'success': True, 'response': resp.json()})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
 
 
 @dashboard_bp.route('/dashboard')

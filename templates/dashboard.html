@@ -414,6 +414,33 @@
         </div>
 
     </div><!-- /dashboard-grid -->
+
+    <!-- Dashboard Footer -->
+    <footer class="mt-12 pt-8 pb-6 border-t" style="border-color: rgba(0,0,0,0.06);">
+        <div class="text-center">
+            <div class="flex flex-wrap items-center justify-center gap-4 mb-4">
+                <img src="{{ url_for('static', filename='tara/tara_closeup.png') }}" alt="Tara" class="w-8 h-8 rounded-full ring-2 ring-coral">
+                <span class="font-display text-lg font-bold" style="color: var(--charcoal);">ZenTara</span>
+                <span class="text-gray-400">—</span>
+                <span class="text-sm text-gray-500">AI-powered carrier contract intelligence</span>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
+                <span class="text-xs px-3 py-1 rounded-full" style="background: rgba(255,107,107,0.08); color: var(--coral);">📦 FedEx</span>
+                <span class="text-xs px-3 py-1 rounded-full" style="background: rgba(255,179,71,0.1); color: var(--gold);">📦 UPS</span>
+                <span class="text-xs px-3 py-1 rounded-full" style="background: rgba(78,205,196,0.1); color: var(--teal);">📦 DHL</span>
+                <span class="text-xs px-3 py-1 rounded-full" style="background: rgba(30,30,46,0.06); color: #888;">📦 USPS</span>
+                <span class="text-xs px-3 py-1 rounded-full" style="background: rgba(30,30,46,0.06); color: #888;">📦 Maersk</span>
+                <span class="text-xs px-3 py-1 rounded-full" style="background: rgba(30,30,46,0.06); color: #888;">📦 XPO</span>
+                <span class="text-xs px-3 py-1 rounded-full" style="background: rgba(30,30,46,0.06); color: #888;">+ Any Carrier SLA</span>
+            </div>
+            <p class="text-xs text-gray-400 mb-3">We support <strong>all</strong> carrier SLAs — upload any contract from any logistics provider, and Tara will analyze it instantly.</p>
+            <div class="flex justify-center gap-6 text-xs text-gray-400">
+                <a href="/privacy" class="hover:text-coral transition-colors">Privacy Policy</a>
+                <a href="/terms" class="hover:text-coral transition-colors">Terms of Service</a>
+                <a href="/integrations" class="hover:text-coral transition-colors">Integrations</a>
+            </div>
+        </div>
+    </footer>
 </div>
 
 <!-- Dismiss Alert Modal -->

@@ -99,6 +99,14 @@ def set_active_sla(carrier_id, sla_id):
     return jsonify({'success': True, 'message': f'Version {sla.version_label} is now active'})
 
 
+@carriers_bp.route('/carrier/<int:carrier_id>/deactivate-sla/<int:sla_id>', methods=['POST'])
+def deactivate_sla(carrier_id, sla_id):
+    sla = SLADocument.query.get_or_404(sla_id)
+    sla.is_active = False
+    db.session.commit()
+    return jsonify({'success': True, 'message': f'Version {sla.version_label} has been deactivated'})
+
+
 @carriers_bp.route('/carrier/<int:carrier_id>/metrics', methods=['POST'])
 def add_metric(carrier_id):
     carrier = Carrier.query.get_or_404(carrier_id)

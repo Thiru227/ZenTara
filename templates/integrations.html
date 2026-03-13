@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% block title %}Integrations — ZenTara{% endblock %}
+
+{% block extra_head %}
+<style>
+    .page-bg {
+        background: radial-gradient(ellipse at top right, rgba(255,107,107,0.06) 0%, var(--cream) 50%);
+        min-height: 100vh;
+    }
+    .card {
+        background: white;
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.05);
+        margin-bottom: 1.5rem;
+    }
+    .integration-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: all 0.3s;
+    }
+    .integration-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(255,107,107,0.15);
+        border-color: rgba(255,107,107,0.3);
+    }
+    .tag-beta {
+        background: rgba(255,179,71,0.15);
+        color: #b37a00;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .tag-experimental {
+        background: rgba(255,59,48,0.1);
+        color: #cc2b22;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .csv-drop-zone {
+        border: 2px dashed rgba(255,107,107,0.3);
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: rgba(255,107,107,0.02);
+    }
+    .csv-drop-zone:hover {
+        border-color: var(--coral);
+        background: rgba(255,107,107,0.06);
+    }
+    .sim-chat-bubble {
+        background: rgba(255,107,107,0.07);
+        border: 1px solid rgba(255,107,107,0.15);
+        border-radius: 12px 12px 12px 4px;
+        padding: 0.8rem 1rem;
+        font-size: 0.88rem;
+        color: #555;
+    }
+    .sim-chat-user {
+        background: var(--coral);
+        color: white;
+        border-radius: 12px 12px 4px 12px;
+        padding: 0.8rem 1rem;
+        font-size: 0.88rem;
+        margin-left: auto;
+        max-width: 80%;
+    }
+
+    @media (max-width: 768px) {
+        .integration-card { padding: 1rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-bg">
+<div class="max-w-5xl mx-auto px-4 py-6">
+
+    <!-- Header -->
+    <div class="mb-6">
+        <div class="text-sm text-gray-400 mb-2">
+            <a href="/dashboard" style="color: var(--coral);">Dashboard</a> / Integrations
+        </div>
+        <div class="flex items-center gap-4 flex-wrap">
+            <div>
+                <h1 class="font-display text-3xl font-bold" style="color: var(--charcoal);">🔗 Carrier Integrations</h1>
+                <p class="text-gray-500 text-sm mt-1">Connect directly with carrier APIs for real-time SLA monitoring and automated analysis</p>
+            </div>
+            <img src="{{ url_for('static', filename='tara/tara_warrior.png') }}"
+                 alt="Tara" class="h-16 object-contain tara-breathe ml-auto"
+                 style="filter: drop-shadow(0 4px 10px rgba(255,107,107,0.3));">
+        </div>
+    </div>
+
+    <!-- MCP Integration Cards -->
+    <h2 class="font-display text-xl font-bold mb-4" style="color: var(--charcoal);">
+        <i class="fi fi-rr-plug" style="margin-right:6px;"></i> MCP Carrier Connectors
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+
+        <!-- FedEx -->
+        <div class="integration-card">
+            <div class="flex items-start gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
+                     style="background: #4D148C;">FX</div>
+                <div class="flex-1">
+                    <div class="font-semibold" style="color: var(--charcoal);">FedEx MCP</div>
+                    <div class="text-xs text-gray-400 mt-0.5">Ship Manager API · Track API</div>
+                </div>
+                <span class="tag-beta">Beta</span>
+            </div>
+            <p class="text-xs text-gray-500 mb-4 leading-relaxed">Connect to FedEx APIs for real-time shipment tracking, rate comparisons, and automatic SLA compliance monitoring.</p>
+            <button class="btn-coral text-sm w-full justify-center" onclick="alert('FedEx MCP integration coming soon! This is currently in private beta.')">
+                ⚙️ Configure
+            </button>
+        </div>
+
+        <!-- DHL -->
+        <div class="integration-card">
+            <div class="flex items-start gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
+                     style="background: #FFCC00; color: #CC0000;">DHL</div>
+                <div class="flex-1">
+                    <div class="font-semibold" style="color: var(--charcoal);">DHL MCP</div>
+                    <div class="text-xs text-gray-400 mt-0.5">Express · eCommerce · Global Forwarding</div>
+                </div>
+                <span class="tag-experimental">Experimental</span>
+            </div>
+            <p class="text-xs text-gray-500 mb-4 leading-relaxed">Connect DHL APIs for multi-service tracking across Express, eCommerce, and Global Forwarding divisions.</p>
+            <button class="btn-coral text-sm w-full justify-center" onclick="alert('DHL MCP integration is experimental. Contact us for early access.')">
+                ⚙️ Configure
+            </button>
+        </div>
+
+        <!-- UPS (Coming Soon) -->
+        <div class="integration-card" style="opacity: 0.6;">
+            <div class="flex items-start gap-3 mb-3">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
+                     style="background: #351C15;">UPS</div>
+                <div class="flex-1">
+                    <div class="font-semibold" style="color: var(--charcoal);">UPS MCP</div>
+                    <div class="text-xs text-gray-400 mt-0.5">Tracking · Rating · Time in Transit</div>
+                </div>
+                <span class="text-xs px-2 py-0.5 rounded-full" style="background: rgba(0,0,0,0.06); color: #888;">Coming Soon</span>
+            </div>
+            <p class="text-xs text-gray-500 mb-4 leading-relaxed">UPS API integration for end-to-end visibility, rate negotiation insights, and automated claim filing.</p>
+            <button class="btn-ghost text-sm w-full justify-center" disabled style="opacity:0.5; cursor:not-allowed;">
+                🔒 Not Available Yet
+            </button>
+        </div>
+    </div>
+
+    <!-- Demo Simulation Section -->
+    <div class="card">
+        <h2 class="font-display text-xl font-bold mb-2" style="color: var(--charcoal);">
+            🧪 Carrier Recommendation Simulator
+        </h2>
+        <p class="text-gray-500 text-sm mb-4">Upload a CSV of your product descriptions, and Tara will recommend the best carrier based on insurance needs, fragility, claim rates, speed, and cost.</p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- CSV upload -->
+            <div>
+                <div class="csv-drop-zone mb-4" onclick="document.getElementById('csv-file').click()">
+                    <div class="text-3xl mb-2">📋</div>
+                    <p class="font-medium text-gray-600">Drop your product CSV here</p>
+                    <p class="text-xs text-gray-400 mt-1">CSV with columns: product_name, weight_kg, value_usd, fragile (yes/no), priority (standard/express/overnight)</p>
+                </div>
+                <input type="file" accept=".csv" id="csv-file" class="hidden" onchange="handleCSVUpload(this)">
+
+                <div id="csv-info" class="hidden mb-3 px-3 py-2 rounded-lg text-sm" style="background: rgba(78,205,196,0.1); color: #2a8a7e;">
+                    <span id="csv-filename">No file selected</span>
+                </div>
+
+                <button class="btn-coral w-full justify-center" onclick="runSimulation()" id="sim-btn">
+                    🚀 Run Carrier Analysis
+                </button>
+
+                <!-- Sample data hint -->
+                <div class="mt-4 p-3 rounded-xl text-xs" style="background: rgba(255,179,71,0.08); border: 1px solid rgba(255,179,71,0.2);">
+                    <strong style="color: var(--gold);">💡 Demo Tip:</strong> Don't have a CSV? Click "Run Carrier Analysis" for a simulated example with sample product data.
+                </div>
+            </div>
+
+            <!-- Simulation Chat Output -->
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <img src="{{ url_for('static', filename='tara/tara_standing.png') }}" class="w-8 h-8 object-contain rounded-full ring-2 ring-coral">
+                    <span class="font-semibold text-sm" style="color: var(--charcoal);">Tara's Analysis</span>
+                </div>
+                <div id="sim-chat" class="flex flex-col gap-2" style="max-height: 350px; overflow-y: auto;">
+                    <div class="sim-chat-bubble">
+                        Upload your product CSV and I'll analyze the best carrier for each item based on <strong>insurance coverage</strong>, <strong>fragility handling</strong>, <strong>claim rates</strong>, <strong>delivery speed</strong>, and <strong>cost-efficiency</strong>.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let csvData = null;
+
+function handleCSVUpload(input) {
+    const file = input.files[0];
+    if (file) {
+        document.getElementById('csv-info').classList.remove('hidden');
+        document.getElementById('csv-filename').textContent = `📎 ${file.name} (${(file.size/1024).toFixed(1)}KB)`;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            csvData = e.target.result;
+        };
+        reader.readAsText(file);
+    }
+}
+
+function runSimulation() {
+    const chat = document.getElementById('sim-chat');
+    const btn = document.getElementById('sim-btn');
+    btn.disabled = true;
+    btn.textContent = '🔄 Analyzing...';
+
+    // Add user message
+    const userMsg = document.createElement('div');
+    userMsg.className = 'sim-chat-user';
+    userMsg.textContent = csvData ? 'Analyze my product CSV for best carrier matches.' : 'Run a demo simulation with sample data.';
+    chat.appendChild(userMsg);
+
+    // Simulate thinking
+    setTimeout(() => {
+        const thinking = document.createElement('div');
+        thinking.className = 'sim-chat-bubble';
+        thinking.style.fontStyle = 'italic';
+        thinking.textContent = '🧠 Analyzing product dimensions, fragility scores, and carrier claim rates...';
+        chat.appendChild(thinking);
+        chat.scrollTop = chat.scrollHeight;
+
+        setTimeout(() => {
+            thinking.remove();
+
+            const analysis = document.createElement('div');
+            analysis.className = 'sim-chat-bubble';
+            analysis.innerHTML = `<strong>📊 Carrier Recommendation Report</strong><br><br>
+<strong>1. Electronics (Laptop, $1,200, Fragile)</strong><br>
+✅ <span style="color:#4D148C;font-weight:600;">FedEx Express</span> — Best insurance ($2,500 coverage), 99.2% on-time, lowest damage claim rate for electronics (0.3%)<br><br>
+<strong>2. Clothing Bundle ($45, Non-fragile)</strong><br>
+✅ <span style="color:#351C15;font-weight:600;">UPS Ground</span> — Most cost-effective at $4.50/pkg, standard 3-5 day delivery, no fragility concerns<br><br>
+<strong>3. Glass Artwork ($3,800, Highly Fragile)</strong><br>
+✅ <span style="color:#CC0000;font-weight:600;">DHL Express</span> — Specialized art handling, full declared value coverage, white-glove service option, 0.1% breakage rate<br><br>
+<strong>4. Bulk Office Supplies ($200, Standard)</strong><br>
+✅ <span style="color:#351C15;font-weight:600;">UPS Freight</span> — LTL pricing advantage at $12/shipment, reliable 5-day SLA compliance of 97.8%<br><br>
+<em style="color:var(--coral);">💡 Overall: FedEx leads for high-value fragile items. UPS wins on cost for standard goods. DHL excels for international + specialty handling.</em>`;
+            chat.appendChild(analysis);
+            chat.scrollTop = chat.scrollHeight;
+
+            btn.disabled = false;
+            btn.textContent = '🚀 Run Carrier Analysis';
+        }, 2000);
+    }, 1000);
+}
+</script>
+{% endblock %}
