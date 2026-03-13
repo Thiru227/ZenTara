@@ -4,8 +4,8 @@
   "description": "Master your carrier contracts with AI-driven clarity.",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#14b8a6",
-  "background_color": "#1f2937",
+  "theme_color": "#FF6B6B",
+  "background_color": "#1E1E2E",
   "icons": [
     {
       "src": "/static/icon-192x192.png",

@@ -8,15 +8,19 @@
 
     <!-- PWA & Push Notifications Setup -->
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#14b8a6">
+    <meta name="theme-color" content="#FF6B6B">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
-      // 1. Initialize OneSignal
+      // 1. Initialize OneSignal — NO persistent bell icon
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(function(OneSignal) {
         OneSignal.init({
-          appId: "75c70233-bd82-4d22-8490-dd752a36f79b", // Replace with your actual App ID
-          notifyButton: { enable: true }, // Optional prompt button
+          appId: "75c70233-bd82-4d22-8490-dd752a36f79b",
+          notifyButton: { enable: false },
+          autoPrompt: true,
+          allowLocalhostAsSecureOrigin: true
         });
       });
 
@@ -344,6 +348,43 @@
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .three-col { grid-template-columns: 1fr !important; }
+            .stat-number { font-size: 2rem !important; }
+            .feature-card { padding: 1.25rem !important; }
+            h1 { font-size: 2.2rem !important; line-height: 1.2 !important; }
+            h2 { font-size: 1.6rem !important; }
+        }
+
+        /* Mobile hamburger menu */
+        .mobile-nav-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(30, 30, 46, 0.97);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .mobile-nav-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .mobile-nav-overlay a {
+            font-size: 1.25rem;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.6rem 2rem;
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+        .mobile-nav-overlay a:hover {
+            background: rgba(255,107,107,0.2);
         }
 
         /* FLASH MESSAGES */
@@ -391,7 +432,7 @@
                     <span class="hidden sm:inline text-xs text-gray-400 font-mono">v2.1</span>
                 </a>
 
-                <!-- Nav Links -->
+                <!-- Nav Links (Desktop) -->
                 <div class="hidden md:flex items-center gap-1">
                     <a href="/dashboard" class="nav-link {% if request.endpoint == 'dashboard.dashboard' %}active{% endif %}"><i class="fi fi-rr-chart-histogram" style="margin-right:4px"></i> Dashboard</a>
                     <a href="/carriers" class="nav-link {% if 'carriers' in request.endpoint %}active{% endif %}"><i class="fi fi-rr-truck-side" style="margin-right:4px"></i> Carriers</a>
@@ -407,11 +448,11 @@
                             <i class="fi fi-sr-bell" style="color:#FFB347;font-size:1.25rem"></i>
                             <span id="alert-badge" class="absolute -top-1 -right-1 bg-critical text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden"></span>
                         </a>
-                        <a href="/carriers/new" class="btn-coral text-sm py-2 px-4">
+                        <a href="/carriers/new" class="btn-coral text-sm py-2 px-4 hidden sm:inline-flex">
                             + Add Carrier
                         </a>
                         <!-- User dropdown -->
-                        <div class="relative" id="user-menu">
+                        <div class="relative hidden md:block" id="user-menu">
                             <button onclick="document.getElementById('user-dropdown').classList.toggle('hidden')" 
                                     class="flex items-center gap-2 px-3 py-1.5 rounded-full transition-all hover:bg-white/10" style="cursor:pointer;background:none;border:none;">
                                 {% if current_user.avatar_url %}
@@ -440,17 +481,47 @@
                             </div>
                         </div>
                     {% else %}
-                        <a href="/login" class="btn-ghost text-sm py-2 px-4" style="color:white; border-color: rgba(255,255,255,0.3);">
+                        <a href="/login" class="btn-ghost text-sm py-2 px-4 hidden md:inline-flex" style="color:white; border-color: rgba(255,255,255,0.3);">
                             Log In
                         </a>
-                        <a href="/signup" class="btn-coral text-sm py-2 px-4">
+                        <a href="/signup" class="btn-coral text-sm py-2 px-4 hidden md:inline-flex">
                             Sign Up
                         </a>
                     {% endif %}
+
+                    <!-- Mobile Hamburger Button -->
+                    <button id="hamburger-btn" onclick="document.getElementById('mobile-nav').classList.toggle('active')" 
+                            class="md:hidden flex flex-col gap-1.5 p-2" style="background:none;border:none;cursor:pointer;">
+                        <span class="block w-6 h-0.5 bg-white rounded"></span>
+                        <span class="block w-6 h-0.5 bg-white rounded"></span>
+                        <span class="block w-6 h-0.5 bg-white rounded"></span>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- Mobile Navigation Overlay -->
+    <div id="mobile-nav" class="mobile-nav-overlay">
+        <button onclick="document.getElementById('mobile-nav').classList.remove('active')" 
+                style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;color:white;font-size:2rem;cursor:pointer;">&times;</button>
+        {% if current_user %}
+            <a href="/dashboard" onclick="document.getElementById('mobile-nav').classList.remove('active')">📊 Dashboard</a>
+            <a href="/carriers" onclick="document.getElementById('mobile-nav').classList.remove('active')">🚛 Carriers</a>
+            <a href="/carriers/new" onclick="document.getElementById('mobile-nav').classList.remove('active')">➕ Add Carrier</a>
+            <a href="/compare" onclick="document.getElementById('mobile-nav').classList.remove('active')">⚖️ Compare</a>
+            <a href="/chat" onclick="document.getElementById('mobile-nav').classList.remove('active')">💬 Ask Tara</a>
+            <a href="/alerts" onclick="document.getElementById('mobile-nav').classList.remove('active')">🔔 Alerts</a>
+            {% if current_user.is_admin %}
+            <a href="/admin/users" onclick="document.getElementById('mobile-nav').classList.remove('active')">🛡️ Admin Panel</a>
+            {% endif %}
+            <a href="/logout" style="color:var(--coral);">🚪 Log Out</a>
+        {% else %}
+            <a href="/login" onclick="document.getElementById('mobile-nav').classList.remove('active')">🔑 Log In</a>
+            <a href="/signup" class="btn-coral" onclick="document.getElementById('mobile-nav').classList.remove('active')">🧘 Sign Up</a>
+        {% endif %}
+    </div>
+
     <div class="h-16"></div> <!-- Spacer -->
     {% endif %}
 

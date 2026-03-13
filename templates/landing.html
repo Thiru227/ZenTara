@@ -34,13 +34,16 @@
 
     .mandala {
         position: absolute;
-        width: 500px;
-        height: 500px;
+        width: 300px;
+        height: 300px;
         border-radius: 50%;
         border: 1px solid rgba(255,179,71,0.15);
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+    }
+    @media (min-width: 768px) {
+        .mandala { width: 500px; height: 500px; }
     }
     .mandala::before {
         content: '';
@@ -54,7 +57,7 @@
         position: absolute;
         inset: 40px;
         border-radius: 50%;
-        border: 1px solid rgba(78,205,196,0.15);
+        border: 1px solid rgba(255,179,71,0.15);
     }
 
     section { position: relative; z-index: 10; }
@@ -115,6 +118,14 @@
     .scroll-arrow {
         animation: float 2s ease-in-out infinite;
     }
+
+    /* ── Mobile Landing Fixes ── */
+    @media (max-width: 768px) {
+        .hero-bg { position: absolute; }
+        .mesh-grid { position: absolute; }
+        #particle-canvas { display: none; }
+        .stat-number { font-size: 1.8rem !important; }
+    }
 </style>
 {% endblock %}
 
@@ -133,7 +144,7 @@
     <div class="mandala mandala-spin absolute" style="z-index: 3; opacity: 0.6;"></div>
 
     <!-- Golden outer ring -->
-    <div class="absolute w-96 h-96 rounded-full mandala-spin" style="
+    <div class="absolute w-64 h-64 md:w-96 md:h-96 rounded-full mandala-spin" style="
         border: 2px solid rgba(255,179,71,0.2);
         animation-direction: reverse;
         animation-duration: 30s;
@@ -145,7 +156,7 @@
         <div class="tara-glow-ring"></div>
         <img src="{{ url_for('static', filename='tara/tara_meditation.png') }}"
              alt="Tara — ZenTara's AI yoga instructor"
-             class="h-72 md:h-96 object-contain drop-shadow-2xl relative z-10"
+             class="h-48 sm:h-72 md:h-96 object-contain drop-shadow-2xl relative z-10"
              id="tara-hero">
     </div>
 
@@ -209,7 +220,7 @@
 </section>
 
 <!-- SUPPORTED CARRIERS LOGO CLOUD -->
-<section class="py-12 px-6 border-y border-white/5 bg-white/5 relative z-10 hidden md:block">
+<section class="py-8 md:py-12 px-6 border-y border-white/5 bg-white/5 relative z-10">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 opacity-50 fade-in-up">
         <div class="text-sm tracking-widest uppercase font-mono text-gray-400">Supported Carrier SLAs</div>
         <div class="flex items-center gap-12 grayscale brightness-200">
