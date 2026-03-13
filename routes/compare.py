@@ -26,6 +26,7 @@ def compare_page():
 
 
 @compare_bp.route('/compare/carriers', methods=['POST'])
+@login_required
 def compare_carriers_api():
     data = request.get_json() or {}
     carrier1_id = data.get('carrier1_id')
@@ -45,6 +46,7 @@ def compare_carriers_api():
 
 
 @compare_bp.route('/compare/versions', methods=['POST'])
+@login_required
 def compare_versions_api():
     data = request.get_json() or {}
     sla_v1_id = data.get('sla_v1_id')
@@ -65,6 +67,7 @@ def compare_versions_api():
 
 
 @compare_bp.route('/api/carrier/<int:carrier_id>/versions')
+@login_required
 def carrier_versions(carrier_id):
     versions = SLADocument.query.filter_by(carrier_id=carrier_id).order_by(
         SLADocument.upload_date.desc()

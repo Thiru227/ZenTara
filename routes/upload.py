@@ -33,6 +33,7 @@ def _get_file_extension(filename):
 
 
 @upload_bp.route('/carrier/<int:carrier_id>/upload', methods=['POST'])
+@login_required
 def upload_sla(carrier_id):
     carrier = Carrier.query.get_or_404(carrier_id)
 

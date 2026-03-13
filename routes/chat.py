@@ -70,6 +70,7 @@ def chat_page():
 
 
 @chat_bp.route('/chat/ask', methods=['POST'])
+@login_required
 def global_chat():
     """Global RAG chat across all carrier documents."""
     data = request.get_json() or {}
@@ -113,6 +114,7 @@ def global_chat():
 
 
 @chat_bp.route('/carrier/<int:carrier_id>/chat/ask', methods=['POST'])
+@login_required
 def carrier_chat(carrier_id):
     """Carrier-scoped RAG chat — only this carrier's documents."""
     carrier = Carrier.query.get_or_404(carrier_id)

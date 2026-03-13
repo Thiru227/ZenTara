@@ -15,6 +15,7 @@ def carrier_list():
 
 
 @carriers_bp.route('/carriers/new', methods=['GET', 'POST'])
+@login_required
 def new_carrier():
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
@@ -57,6 +58,7 @@ def new_carrier():
 
 
 @carriers_bp.route('/carrier/<int:carrier_id>')
+@login_required
 def carrier_detail(carrier_id):
     carrier = Carrier.query.get_or_404(carrier_id)
     sla_docs = SLADocument.query.filter_by(carrier_id=carrier_id).order_by(SLADocument.upload_date.desc()).all()
@@ -89,6 +91,7 @@ def carrier_detail(carrier_id):
 
 
 @carriers_bp.route('/carrier/<int:carrier_id>/set-active/<int:sla_id>', methods=['POST'])
+@login_required
 def set_active_sla(carrier_id, sla_id):
     # Deactivate all SLAs for this carrier
     SLADocument.query.filter_by(carrier_id=carrier_id).update({'is_active': False})
@@ -100,6 +103,7 @@ def set_active_sla(carrier_id, sla_id):
 
 
 @carriers_bp.route('/carrier/<int:carrier_id>/deactivate-sla/<int:sla_id>', methods=['POST'])
+@login_required
 def deactivate_sla(carrier_id, sla_id):
     sla = SLADocument.query.get_or_404(sla_id)
     sla.is_active = False
@@ -108,6 +112,7 @@ def deactivate_sla(carrier_id, sla_id):
 
 
 @carriers_bp.route('/carrier/<int:carrier_id>/metrics', methods=['POST'])
+@login_required
 def add_metric(carrier_id):
     carrier = Carrier.query.get_or_404(carrier_id)
     
@@ -127,6 +132,7 @@ def add_metric(carrier_id):
 
 
 @carriers_bp.route('/carrier/<int:carrier_id>/delete', methods=['POST'])
+@login_required
 def delete_carrier(carrier_id):
     carrier = Carrier.query.get_or_404(carrier_id)
     name = carrier.name
@@ -137,6 +143,7 @@ def delete_carrier(carrier_id):
 
 
 @carriers_bp.route('/carrier/<int:carrier_id>/sla/<int:sla_id>/view')
+@login_required
 def view_sla_document(carrier_id, sla_id):
     """View the full extracted text of an SLA document."""
     carrier = Carrier.query.get_or_404(carrier_id)
@@ -154,6 +161,7 @@ def view_sla_document(carrier_id, sla_id):
 
 
 @carriers_bp.route('/carrier/<int:carrier_id>/sla/<int:sla_id>/delete', methods=['POST'])
+@login_required
 def delete_sla(carrier_id, sla_id):
     """Delete an SLA document."""
     sla = SLADocument.query.get_or_404(sla_id)
@@ -172,6 +180,7 @@ def delete_sla(carrier_id, sla_id):
 
 
 @carriers_bp.route('/carrier/<int:carrier_id>/diff/<int:old_id>/<int:new_id>')
+@login_required
 def sla_diff(carrier_id, old_id, new_id):
     """Compare two SLA document versions side-by-side."""
     import difflib
@@ -271,12 +280,14 @@ def sla_diff(carrier_id, old_id, new_id):
 
 
 @carriers_bp.route('/api/carriers')
+@login_required
 def api_carriers():
     carriers = Carrier.query.all()
     return jsonify([c.to_dict() for c in carriers])
 
 
 @carriers_bp.route('/carriers/create-quick', methods=['POST'])
+@login_required
 def create_quick_carrier():
     """Quick-create a carrier via JSON (used by chat page upload).
     Returns existing carrier if name already exists.

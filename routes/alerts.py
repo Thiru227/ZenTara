@@ -23,6 +23,7 @@ def all_alerts():
 
 
 @alerts_bp.route('/alerts/dismiss/<int:alert_id>', methods=['POST'])
+@login_required
 def dismiss_alert(alert_id):
     alert = Alert.query.get_or_404(alert_id)
     alert.dismissed = True
@@ -31,6 +32,7 @@ def dismiss_alert(alert_id):
 
 
 @alerts_bp.route('/alerts/dismiss-all', methods=['POST'])
+@login_required
 def dismiss_all():
     level = request.json.get('level') if request.json else None
     query = Alert.query.filter_by(dismissed=False)
@@ -42,6 +44,7 @@ def dismiss_all():
 
 
 @alerts_bp.route('/alerts/create', methods=['POST'])
+@login_required
 def create_alert():
     """Manually create a test alert."""
     data = request.get_json() or {}
@@ -60,6 +63,7 @@ def create_alert():
 
 
 @alerts_bp.route('/api/alerts')
+@login_required
 def api_alerts():
     alerts = get_active_alerts(dismissed=False)
     return jsonify([a.to_dict() for a in alerts])
