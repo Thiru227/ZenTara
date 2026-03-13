@@ -13,6 +13,12 @@ class Config:
     if _db_url.startswith('postgres://'):
         _db_url = _db_url.replace('postgres://', 'postgresql://', 1)
 
+    # Fix unescaped @ in password (if URL has multiple @'s)
+    # E.g. user:pass@word@host -> user:pass%40word@host
+    if _db_url.count('@') > 1:
+        parts = _db_url.rsplit('@', 1)
+        _db_url = parts[0].replace('@', '%40') + '@' + parts[1]
+
     SQLALCHEMY_DATABASE_URI = _db_url
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
