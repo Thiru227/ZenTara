@@ -235,8 +235,10 @@ def google_callback():
     if not user:
         user = User.query.filter_by(email=email).first()
 
+    is_new = False
     if user:
         # Update existing user with Google info
+        current_app.logger.info(f'Google OAuth: found existing user {email}, active={user.is_active}')
         if not user.google_id:
             user.google_id = google_id
         if not user.avatar_url:
@@ -245,6 +247,8 @@ def google_callback():
             user.auth_provider = 'both'
     else:
         # Create new user
+        is_new = True
+        current_app.logger.info(f'Google OAuth: creating new user {email}')
         user = User(
             email=email,
             full_name=name,
@@ -252,14 +256,17 @@ def google_callback():
             google_id=google_id,
             auth_provider='google',
             role='user',
+            is_active=True,
         )
         db.session.add(user)
 
+    db.session.commit()
+
     if not user.is_active:
+        current_app.logger.warning(f'Google OAuth: user {email} is deactivated!')
         flash('Your account has been deactivated. Contact an admin.', 'error')
         return redirect(url_for('auth.login'))
 
-    db.session.commit()
     _login_user(user)
     flash(f'Welcome, {user.display_name}! 🧘', 'success')
     return redirect(url_for('dashboard.dashboard'))
