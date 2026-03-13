@@ -434,7 +434,7 @@
                 </a>
 
                 <!-- Nav Links (Desktop) — only after login -->
-                {% if current_user.is_authenticated %}
+                {% if current_user %}
                 <div class="hidden md:flex items-center gap-1">
                     <a href="/dashboard" class="nav-link {% if request.endpoint == 'dashboard.dashboard' %}active{% endif %}"><i class="fi fi-rr-chart-histogram" style="margin-right:4px"></i> Dashboard</a>
                     <a href="/carriers" class="nav-link {% if 'carriers' in request.endpoint %}active{% endif %}"><i class="fi fi-rr-truck-side" style="margin-right:4px"></i> Carriers</a>
@@ -446,7 +446,7 @@
 
                 <!-- Right Side -->
                 <div class="flex items-center gap-3">
-                    {% if current_user.is_authenticated %}
+                    {% if current_user %}
                         <a href="/alerts" class="relative">
                             <i class="fi fi-sr-bell" style="color:#FFB347;font-size:1.25rem"></i>
                             <span id="alert-badge" class="absolute -top-1 -right-1 bg-critical text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden"></span>
@@ -508,7 +508,7 @@
     <div id="mobile-nav" class="mobile-nav-overlay">
         <button onclick="document.getElementById('mobile-nav').classList.remove('active')" 
                 style="position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;color:white;font-size:2rem;cursor:pointer;">&times;</button>
-        {% if current_user.is_authenticated %}
+        {% if current_user %}
             <a href="/dashboard" onclick="document.getElementById('mobile-nav').classList.remove('active')">📊 Dashboard</a>
             <a href="/carriers" onclick="document.getElementById('mobile-nav').classList.remove('active')">🚛 Carriers</a>
             <a href="/carriers/new" onclick="document.getElementById('mobile-nav').classList.remove('active')">➕ Add Carrier</a>
