@@ -2,7 +2,7 @@
 importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');
 
 // 2. Custom Offline Caching Logic for ZenTara PWA
-const CACHE_NAME = 'zentara-cache-v1';
+const CACHE_NAME = 'zentara-cache-v2';
 
 // We only specify core shell assets here so the app can load offline
 const ASSETS_TO_CACHE = [
