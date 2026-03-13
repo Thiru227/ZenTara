@@ -8,6 +8,7 @@ from models.carrier import Carrier
 from models.sla import SLADocument, ExtractedClause, Deadline, Alert
 from services.rag_service import ingest_document
 from config import Config
+from routes.auth import login_required
 
 
 def _ai_classify(text, carrier_name, version):
