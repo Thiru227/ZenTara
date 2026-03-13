@@ -107,31 +107,8 @@ def _seed_demo_data(app):
 
     db.session.flush()  # Get IDs
 
-    # Create demo alerts
-    fedex = Carrier.query.filter_by(slug='fedex').first()
-    dhl = Carrier.query.filter_by(slug='dhl').first()
-    ups = Carrier.query.filter_by(slug='ups').first()
-
-    demo_alerts = [
-        Alert(carrier_id=fedex.id, title="FedEx Claim Window Closing Soon",
-              message="FedEx SLA Clause 4.2 — Claim window closes in 5 days. Review shipment #FX-8832 immediately.",
-              level='WARNING', clause_reference='4.2', days_remaining=5),
-        Alert(carrier_id=ups.id, title="UPS Damage Claim CRITICAL",
-              message="UPS SLA Clause 6.1 — Damage claim deadline is TOMORROW. File claim for shipment #UP-2291 now.",
-              level='CRITICAL', clause_reference='6.1', days_remaining=1),
-        Alert(carrier_id=dhl.id, title="DHL SLA Renewal Approaching",
-              message="DHL contract expires in 28 days. Review terms and initiate renewal process.",
-              level='INFO', clause_reference='12.1', days_remaining=28),
-        Alert(carrier_id=fedex.id, title="FedEx SLA v2.1 Uploaded",
-              message="FedEx SLA version 2.1 has been uploaded and processed successfully. 4 key clauses extracted.",
-              level='INFO', clause_reference=None, days_remaining=None),
-    ]
-
-    for alert in demo_alerts:
-        db.session.add(alert)
-
     db.session.commit()
-    app.logger.info("Demo data seeded successfully.")
+    app.logger.info("Demo carriers seeded successfully.")
 
 
 def _seed_admin_user(app):
